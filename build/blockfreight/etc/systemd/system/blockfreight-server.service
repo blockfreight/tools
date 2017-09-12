@@ -1,0 +1,23 @@
+[Unit]
+Description=blockfreight server
+Requires=network-online.target
+BindTo=blockfreight.service
+PartOf=blockfreight.service
+After=network-online.target blockfreight.service
+PropagatesReloadTo=blockfreight.service
+ReloadPropagatedFrom=blockfreight.service
+
+[Service]
+Environment="TMHOME=/etc/basecoin/tendermint"
+Restart=on-failure
+User=basecoin
+Group=basecoin
+PermissionsStartOnly=true
+ExecStart=/usr/bin/tendermint node
+ExecReload=/bin/kill -HUP $MAINPID
+KillSignal=SIGTERM
+
+[Install]
+WantedBy=multi-user.target blockfreight.service
+Also=blockfreight.service
+
