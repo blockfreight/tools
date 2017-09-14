@@ -1,6 +1,6 @@
-# Basecoin example
+# Blockfreight™ example
 
-This is an example of using [basecoin](https://github.com/tendermint/basecoin).
+This is an example of using [blockfreight](https://github.com/blockfreight/blockfreight-alpha).
 
 ## Usage
 
@@ -13,25 +13,25 @@ make create
 1. wait until all the pods are `Running`.
 
    ```
-   kubectl get pods -w -o wide -L tm
+   kubectl get pods -w -o wide -L bftx
    ```
 
 2. wait until app starts.
 
    ```
-   kubectl logs -c app -f tm-0
+   kubectl logs -c app -f bftx-0
    ```
 
 3. get account's address of the second pod
 
    ```
-   ADDR=`kubectl exec -c app tm-1 -- cat /app/key.json | jq ".address" | tr -d "\""`
+   ADDR=`kubectl exec -c app bftx-1 -- cat /app/key.json | jq ".address" | tr -d "\""`
    ```
 
 4. send 5 coins to it from the first pod
 
    ```
-   kubectl exec -c app tm-0 -- basecoin tx send --to "0x$ADDR" --amount 5mycoin --from /app/key.json --chain_id chain-tTH4mi
+   kubectl exec -c app bftx-0 -- bftx construct bf_tx_example.json --chain_id chain-IdealX
    ```
 
 

@@ -40,27 +40,17 @@ data:
       location /app_pub_key.json { root /usr/share/nginx/; }
     }
 ---
-apiVersion: policy/v1beta1
-kind: PodDisruptionBudget
-metadata:
-  name: tm-budget
-spec:
-  selector:
-    matchLabels:
-      app: tm
-  minAvailable: 2
----
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
-  name: tm
+  name: bftx
 spec:
-  serviceName: basecoin
+  serviceName: blockfreight
   replicas: 4
   template:
     metadata:
       labels:
-        app: tm
+        app: bftx
       annotations:
         pod.beta.kubernetes.io/init-containers: '[{
           "name": "tm-gen-validator",
@@ -80,12 +70,12 @@ spec:
         },
         {
           "name": "app-gen-key",
-          "image": "tendermint/basecoin:0.5.1",
+          "image": "tendermint/blockfreight:0.5.1",
           "imagePullPolicy": "IfNotPresent",
           "command": ["bash", "-c", "
             set -ex\n
             if [ ! -f /app/key.json ]; then\n
-              basecoin key new > /app/key.json\n
+              blockfreight key new > /app/key.json\n
               # pub_key.json will be served by app-pub-key container\n
               cat /app/key.json | jq \".pub_key\" > /app/pub_key.json\n
             fi\n
@@ -187,12 +177,13 @@ spec:
           # replace "tm-N" with public keys in genesis file
           cp /etc/app/genesis.json genesis.json
           fqdn_suffix=$(hostname -f | sed 's#[^.]*\.\(\)#\1#')
-          # for every "base/account"
-          i=0
-          length=$(cat genesis.json | jq ".app_options.accounts | length")
-          while [[ $i -lt $length ]]; do
-            # extract pod name ("tm-0")
-            pod=$(cat genesis.json | jq -r ".app_options.accounts[$i].pub_key")
+          
+          # # for every "base/account"
+          # i=0
+          # length=$(cat genesis.json | jq ".app_options.accounts | length")
+          # while [[ $i -lt $length ]]; do
+          #   # extract pod name ("tm-0")
+          #   pod=$(cat genesis.json | jq -r ".app_options.accounts[$i].pub_key")
 
             # wait until pod starts to serve its pub_key
             set +e
