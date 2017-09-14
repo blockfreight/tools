@@ -19,13 +19,16 @@ set -e
 
 case "$1" in
     configure)
-    chown basecoin.basecoin /etc/basecoin
-    sudo -Hu basecoin basecoin init --home /etc/basecoin 2B24DEE2364762300168DF19B6C18BCE2D399EA2
+    chown blockfreight:blockfreight /etc/blockfreight
+    # -H, --set-home set HOME variable to target user's home dir
+    # -u, --user=user run command (or edit file) as specified user name or ID
+    # Tue Sep 12 (JS) @todo: -- What should '2B24DEE2364762300168DF19B6C18BCE2D399EA2' be set to??
+    sudo -Hu blockfreight blockfreight init --home /etc/blockfreight 2B24DEE2364762300168DF19B6C18BCE2D399EA2
     #The above command generates a genesis.json file that contains validators. This is wrong, the validator part should be empty. https://github.com/tendermint/basecoin/issues/124
-    sudo -Hu basecoin tendermint init --home /etc/basecoin/tendermint
+    sudo -Hu blockfreight tendermint init --home /etc/blockfreight/tendermint
     #The above command might need some kind of additional option in the future. https://github.com/tendermint/tendermint/issues/542
-    chmod 755 /etc/basecoin/tendermint
-    chown basecoin.basecoin /etc/basecoin/tendermint
+    chmod 755 /etc/blockfreight/tendermint
+    chown blockfreight:blockfreight /etc/blockfreight/tendermint
     systemctl daemon-reload
     ;;
 
