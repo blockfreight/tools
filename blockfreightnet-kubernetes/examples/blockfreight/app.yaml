@@ -40,16 +40,16 @@ data:
       location /app_pub_key.json { root /usr/share/nginx/; }
     }
 ---
-apiVersion: policy/v1beta1
-kind: PodDisruptionBudget
-metadata:
-  name: tm-budget
-spec:
-  selector:
-    matchLabels:
-      app: tm
-  minAvailable: 2
----
+# apiVersion: policy/v1beta1
+# kind: PodDisruptionBudget
+# metadata:
+#   name: tm-budget
+# spec:
+#   selector:
+#     matchLabels:
+#       app: tm
+#   minAvailable: 2
+# ---
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
