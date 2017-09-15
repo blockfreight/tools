@@ -40,6 +40,56 @@ data:
       location /app_pub_key.json { root /usr/share/nginx/; }
     }
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  genesis.json: |-
+    {
+      "chain_id": "chain-IdealX",
+      "app_options": {
+        "accounts": [
+          {
+            "pub_key": "bftx-0",
+            "coins": [
+              {
+                "denom": "mycoin",
+                "amount": 1000000000
+              }
+            ]
+          },
+          {
+            "pub_key": "bftx-1",
+            "coins": [
+              {
+                "denom": "mycoin",
+                "amount": 1000000000
+              }
+            ]
+          },
+          {
+            "pub_key": "bftx-2",
+            "coins": [
+              {
+                "denom": "mycoin",
+                "amount": 1000000000
+              }
+            ]
+          },
+          {
+            "pub_key": "bftx-3",
+            "coins": [
+              {
+                "denom": "mycoin",
+                "amount": 1000000000
+              }
+            ]
+          }
+        ]
+      }
+    }
+---
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
@@ -70,7 +120,7 @@ spec:
         },
         {
           "name": "app-gen-key",
-          "image": "tendermint/blockfreight:0.5.1",
+          "image": "tendermint/basecoin:0.5.1",
           "imagePullPolicy": "IfNotPresent",
           "command": ["bash", "-c", "
             set -ex\n
@@ -98,17 +148,17 @@ spec:
         - name: SEEDS
           valueFrom:
             configMapKeyRef:
-              name: bft-config
+              name: bftx-config
               key: seeds
         - name: VALIDATOR_POWER
           valueFrom:
             configMapKeyRef:
-              name: bft-config
+              name: bftx-config
               key: validator.power
         - name: VALIDATORS
           valueFrom:
             configMapKeyRef:
-              name: bft-config
+              name: bftx-config
               key: validators
         - name: TMHOME
           value: /tendermint
@@ -247,7 +297,7 @@ spec:
       volumes:
       - name: tmconfigdir
         configMap:
-          name: bft-config
+          name: bftx-config
       - name: appconfigdir
         configMap:
           name: app-config
