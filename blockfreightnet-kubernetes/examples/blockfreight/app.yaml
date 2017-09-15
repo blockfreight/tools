@@ -40,55 +40,15 @@ data:
       location /app_pub_key.json { root /usr/share/nginx/; }
     }
 ---
-apiVersion: v1
-kind: ConfigMap
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
 metadata:
-  name: app-config
-data:
-  genesis.json: |-
-    {
-      "chain_id": "chain-IdealX",
-      "app_options": {
-        "accounts": [
-          {
-            "pub_key": "bftx-0",
-            "coins": [
-              {
-                "denom": "mycoin",
-                "amount": 1000000000
-              }
-            ]
-          },
-          {
-            "pub_key": "bftx-1",
-            "coins": [
-              {
-                "denom": "mycoin",
-                "amount": 1000000000
-              }
-            ]
-          },
-          {
-            "pub_key": "bftx-2",
-            "coins": [
-              {
-                "denom": "mycoin",
-                "amount": 1000000000
-              }
-            ]
-          },
-          {
-            "pub_key": "bftx-3",
-            "coins": [
-              {
-                "denom": "mycoin",
-                "amount": 1000000000
-              }
-            ]
-          }
-        ]
-      }
-    }
+  name: tm-budget
+spec:
+  selector:
+    matchLabels:
+      app: tm
+  minAvailable: 2
 ---
 apiVersion: apps/v1beta1
 kind: StatefulSet
@@ -101,6 +61,7 @@ spec:
     metadata:
       labels:
         app: bftx
+        version: v0.3.0
       annotations:
         pod.beta.kubernetes.io/init-containers: '[{
           "name": "tm-gen-validator",
@@ -117,23 +78,27 @@ spec:
           "volumeMounts": [
             {"name": "tmdir", "mountPath": "/tendermint"}
           ]
-        },
-        {
-          "name": "app-gen-key",
-          "image": "tendermint/basecoin:0.5.1",
-          "imagePullPolicy": "IfNotPresent",
-          "command": ["bash", "-c", "
-            set -ex\n
-            if [ ! -f /app/key.json ]; then\n
-              blockfreight key new > /app/key.json\n
-              # pub_key.json will be served by app-pub-key container\n
-              cat /app/key.json | jq \".pub_key\" > /app/pub_key.json\n
-            fi\n
-          "],
-          "volumeMounts": [
-            {"name": "appdir", "mountPath": "/app"}
-          ]
         }]'
+
+        #  Fragment below from example in Basecoin.
+
+        # },
+        # {
+        #   "name": "app-gen-key",
+        #   "image": "tendermint/basecoin:0.5.1",
+        #   "imagePullPolicy": "IfNotPresent",
+        #   "command": ["bash", "-c", "
+        #     set -ex\n
+        #     if [ ! -f /app/key.json ]; then\n
+        #       blockfreight key new > /app/key.json\n
+        #       # pub_key.json will be served by app-pub-key container\n
+        #       cat /app/key.json | jq \".pub_key\" > /app/pub_key.json\n
+        #     fi\n
+        #   "],
+        #   "volumeMounts": [
+        #     {"name": "appdir", "mountPath": "/app"}
+        #   ]
+        
     spec:
       containers:
       - name: tm
@@ -213,9 +178,9 @@ spec:
 
       - name: app
         imagePullPolicy: IfNotPresent
-        image: tendermint/basecoin:0.5.1
+        image: blockfreight/blockfreight-alpha:0.3.0
         env:
-        - name: BCHOME
+        - name: BFTXHOME
           value: /app
         workingDir: /app
         command:
@@ -259,7 +224,7 @@ spec:
 
           rm -f /socks/app.sock # remove old socket
 
-          basecoin start --address="unix:///socks/app.sock" --without-tendermint
+          bftnode start --address="unix:///socks/app.sock" --without-tendermint
         volumeMounts:
         - name: appdir
           mountPath: /app
