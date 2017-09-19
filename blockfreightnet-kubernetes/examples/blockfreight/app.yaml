@@ -248,7 +248,7 @@ spec:
           # => we cannot serve from /tendermint, so we copy the file
           mkdir -p /usr/share/nginx
           cp /tendermint/pub_key.json /usr/share/nginx/pub_key.json
-          cp /app/pub_key.json /usr/share/nginx/app_pub_key.json
+          # cp /app/pub_key.json /usr/share/nginx/app_pub_key.json
           nginx -g "daemon off;"
         volumeMounts:
         - name: tmdir
