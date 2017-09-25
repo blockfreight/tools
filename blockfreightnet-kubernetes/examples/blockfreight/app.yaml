@@ -13,7 +13,9 @@ spec:
     name: p2p
   - port: 46657
     name: rpc
-  clusterIP: None
+  - port: 46658
+    name: app
+    protocol: TCP
   selector:
     app: bftx
 ---
@@ -40,16 +42,6 @@ data:
       location /app_pub_key.json { root /usr/share/nginx/; }
     }
 ---
-# apiVersion: policy/v1beta1
-# kind: PodDisruptionBudget
-# metadata:
-#   name: tm-budget
-# spec:
-#   selector:
-#     matchLabels:
-#       app: tm
-#   minAvailable: 2
-# ---
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
@@ -79,28 +71,60 @@ spec:
             {"name": "tmdir", "mountPath": "/tendermint"}
           ]
         }]'
-
-        #  Fragment below from example in Basecoin.
-
-        # },
-        # {
-        #   "name": "app-gen-key",
-        #   "image": "tendermint/basecoin:0.5.1",
-        #   "imagePullPolicy": "IfNotPresent",
-        #   "command": ["bash", "-c", "
-        #     set -ex\n
-        #     if [ ! -f /app/key.json ]; then\n
-        #       blockfreight key new > /app/key.json\n
-        #       # pub_key.json will be served by app-pub-key container\n
-        #       cat /app/key.json | jq \".pub_key\" > /app/pub_key.json\n
-        #     fi\n
-        #   "],
-        #   "volumeMounts": [
-        #     {"name": "appdir", "mountPath": "/app"}
-        #   ]
-        
     spec:
       containers:
+      - name: app
+        imagePullPolicy: IfNotPresent
+        image: blockfreight/blockfreight-alpha:latest
+        ports:
+        - containerPort: 46658
+        env:
+        - name: BFTXHOME
+          value: /app
+        workingDir: /app
+        command:
+        - bash
+        - "-c"
+        - |
+          set -ex
+
+          # replace "tm-N" with public keys in genesis file
+          cp /etc/app/genesis.json genesis.json
+          fqdn_suffix=$(hostname -f | sed 's#[^.]*\.\(\)#\1#')
+
+            # wait until pod starts to serve its pub_key
+            set +e
+
+            curl -s --fail "tcp://$pod.$fqdn_suffix/app_pub_key.json" > /dev/null
+            ERR=$?
+            while [ "$ERR" != 0 ]; do
+              sleep 5
+              curl -s --fail "tcp://$pod.$fqdn_suffix/app_pub_key.json" > /dev/null
+              ERR=$?
+            done
+            set -e
+
+            # get its pub_key
+            curl -s "tcp://$pod.$fqdn_suffix/app_pub_key.json" | jq "." > k.json
+
+            # replace pod name with it ("tm-0" => "{"type": ..., "data": ...}")
+            cat genesis.json | jq ".app_options.accounts[$i].pub_key = $(cat k.json | jq '.')" > tmpgenesis && mv tmpgenesis genesis.json
+            rm -f k.json
+
+            i=$((i+1))
+          done
+
+          rm -f /socks/app.sock # remove old socket
+
+          bftnode start --address="unix:///socks/app.sock" --without-tendermint
+        volumeMounts:
+        - name: appdir
+          mountPath: /app
+        - mountPath: /etc/app/genesis.json
+          name: appconfigdir
+          subPath: genesis.json
+        - name: socksdir
+          mountPath: /socks
       - name: tm
         imagePullPolicy: IfNotPresent
         image: tendermint/tendermint:0.10.0
@@ -166,7 +190,7 @@ spec:
           done
           seeds=$(IFS=','; echo "${seeds[*]}")
 
-          tendermint node --p2p.seeds="$seeds" --moniker="`hostname`" --proxy_app="unix:///socks/app.sock"
+          tendermint node --p2p.seeds="$seeds" --proxy_app="blockfreight:46658"
         volumeMounts:
         - name: tmdir
           mountPath: /tendermint
@@ -176,63 +200,6 @@ spec:
         - name: socksdir
           mountPath: /socks
 
-      - name: app
-        imagePullPolicy: IfNotPresent
-        image: blockfreight/blockfreight-alpha:latest
-        env:
-        - name: BFTXHOME
-          value: /app
-        workingDir: /app
-        command:
-        - bash
-        - "-c"
-        - |
-          set -ex
-
-          # replace "tm-N" with public keys in genesis file
-          cp /etc/app/genesis.json genesis.json
-          fqdn_suffix=$(hostname -f | sed 's#[^.]*\.\(\)#\1#')
-          
-          # # for every "base/account"
-          # i=0
-          # length=$(cat genesis.json | jq ".app_options.accounts | length")
-          # while [[ $i -lt $length ]]; do
-          #   # extract pod name ("tm-0")
-          #   pod=$(cat genesis.json | jq -r ".app_options.accounts[$i].pub_key")
-
-            # wait until pod starts to serve its pub_key
-            set +e
-
-            curl -s --fail "http://$pod.$fqdn_suffix/app_pub_key.json" > /dev/null
-            ERR=$?
-            while [ "$ERR" != 0 ]; do
-              sleep 5
-              curl -s --fail "http://$pod.$fqdn_suffix/app_pub_key.json" > /dev/null
-              ERR=$?
-            done
-            set -e
-
-            # get its pub_key
-            curl -s "http://$pod.$fqdn_suffix/app_pub_key.json" | jq "." > k.json
-
-            # replace pod name with it ("tm-0" => "{"type": ..., "data": ...}")
-            cat genesis.json | jq ".app_options.accounts[$i].pub_key = $(cat k.json | jq '.')" > tmpgenesis && mv tmpgenesis genesis.json
-            rm -f k.json
-
-            i=$((i+1))
-          done
-
-          rm -f /socks/app.sock # remove old socket
-
-          bftnode start --address="unix:///socks/app.sock" --without-tendermint
-        volumeMounts:
-        - name: appdir
-          mountPath: /app
-        - mountPath: /etc/app/genesis.json
-          name: appconfigdir
-          subPath: genesis.json
-        - name: socksdir
-          mountPath: /socks
 
       - name: pub-key
         imagePullPolicy: IfNotPresent
