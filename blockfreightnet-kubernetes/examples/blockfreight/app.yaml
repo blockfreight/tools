@@ -16,6 +16,7 @@ spec:
   - port: 46658
     name: app
     protocol: TCP
+  clusterIP: None
   selector:
     app: bftx
 ---
@@ -41,6 +42,16 @@ data:
       location /pub_key.json { root /usr/share/nginx/; }
       location /app_pub_key.json { root /usr/share/nginx/; }
     }
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: bftx-budget
+spec:
+  selector:
+    matchLabels:
+      app: bftx
+  minAvailable: 2
 ---
 apiVersion: apps/v1beta1
 kind: StatefulSet
@@ -116,7 +127,7 @@ spec:
 
           rm -f /socks/app.sock # remove old socket
 
-          bftnode start --address="unix:///socks/app.sock" --without-tendermint
+          bftnode start 
         volumeMounts:
         - name: appdir
           mountPath: /app
@@ -190,7 +201,7 @@ spec:
           done
           seeds=$(IFS=','; echo "${seeds[*]}")
 
-          tendermint node --p2p.seeds="$seeds" --proxy_app="blockfreight:46658"
+          tendermint node --p2p.seeds="$seeds" --moniker="`hostname`" --proxy_app="blockfreight:46658"
         volumeMounts:
         - name: tmdir
           mountPath: /tendermint
@@ -232,7 +243,7 @@ spec:
           name: bftx-config
       - name: appconfigdir
         configMap:
-          name: app-config
+          name: bftx-config
       - name: socksdir
         emptyDir: {}
 
