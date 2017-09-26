@@ -149,7 +149,7 @@ spec:
           done
           seeds=$(IFS=','; echo "${seeds[*]}")
 
-          tendermint node --p2p.seeds="$seeds" --moniker="`hostname`" --proxy_app="blockfreight:46658"
+          tendermint node --p2p.seeds="$seeds" --moniker="`hostname`" --proxy_app="unix:///socks/app.sock"
         volumeMounts:
         - name: tmdir
           mountPath: /tendermint
@@ -202,6 +202,8 @@ spec:
           done
 
           rm -f /socks/app.sock # remove old socket
+
+          bftnode start --addr="unix:///socks/app.sock"
         volumeMounts:
         - name: appdir
           mountPath: /app
