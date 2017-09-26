@@ -92,6 +92,11 @@ spec:
         env:
         - name: BFTXHOME
           value: /app
+        - name: VALIDATORS
+          valueFrom:
+            configMapKeyRef:
+              name: bftx-config
+              key: validators
         workingDir: /app
         command:
         - bash
@@ -103,31 +108,27 @@ spec:
           cp /etc/app/genesis.json genesis.json
           fqdn_suffix=$(hostname -f | sed 's#[^.]*\.\(\)#\1#')
 
-            # wait until pod starts to serve its pub_key
+
+          # fill genesis file with validators
+          IFS=',' read -ra VALS_ARR <<< "$VALIDATORS"
+          fqdn_suffix=$(hostname -f | sed 's#[^.]*\.\(\)#\1#')
+          for v in "${VALS_ARR[@]}"; do
+            # wait until validator generates priv/pub key pair
             set +e
 
-            curl -s --fail "tcp://$pod.$fqdn_suffix/app_pub_key.json" > /dev/null
+            curl -s --fail "http://$v.$fqdn_suffix/pub_key.json" > /dev/null
             ERR=$?
             while [ "$ERR" != 0 ]; do
               sleep 5
-              curl -s --fail "tcp://$pod.$fqdn_suffix/app_pub_key.json" > /dev/null
+              curl -s --fail "http://$v.$fqdn_suffix/pub_key.json" > /dev/null
               ERR=$?
             done
             set -e
-
-            # get its pub_key
-            curl -s "tcp://$pod.$fqdn_suffix/app_pub_key.json" | jq "." > k.json
-
-            # replace pod name with it ("tm-0" => "{"type": ..., "data": ...}")
-            cat genesis.json | jq ".app_options.accounts[$i].pub_key = $(cat k.json | jq '.')" > tmpgenesis && mv tmpgenesis genesis.json
-            rm -f k.json
-
-            i=$((i+1))
           done
 
           rm -f /socks/app.sock # remove old socket
 
-          bftnode start 
+          bftnode start
         volumeMounts:
         - name: appdir
           mountPath: /app
