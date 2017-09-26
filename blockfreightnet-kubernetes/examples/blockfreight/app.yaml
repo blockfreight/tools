@@ -202,8 +202,6 @@ spec:
           done
 
           rm -f /socks/app.sock # remove old socket
-          pwd
-          ls -la
         volumeMounts:
         - name: appdir
           mountPath: /app
