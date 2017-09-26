@@ -13,8 +13,6 @@ spec:
     name: p2p
   - port: 46657
     name: rpc
-  - port: 46658
-    name: app
     protocol: TCP
   clusterIP: None
   selector:
@@ -41,6 +39,56 @@ data:
       listen [::]:80 default_server ipv6only=on;
       location /pub_key.json { root /usr/share/nginx/; }
       location /app_pub_key.json { root /usr/share/nginx/; }
+    }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  genesis.json: |-
+    {
+      "chain_id": "chain-idealX",
+      "app_options": {
+        "accounts": [
+          {
+            "pub_key": "bftx-0",
+            "coins": [
+              {
+                "denom": "mycoin",
+                "amount": 1000000000
+              }
+            ]
+          },
+          {
+            "pub_key": "bftx-1",
+            "coins": [
+              {
+                "denom": "mycoin",
+                "amount": 1000000000
+              }
+            ]
+          },
+          {
+            "pub_key": "bftx-2",
+            "coins": [
+              {
+                "denom": "mycoin",
+                "amount": 1000000000
+              }
+            ]
+          },
+          {
+            "pub_key": "bftx-3",
+            "coins": [
+              {
+                "denom": "mycoin",
+                "amount": 1000000000
+              }
+            ]
+          }
+        ]
+      }
     }
 ---
 apiVersion: policy/v1beta1
@@ -162,8 +210,6 @@ spec:
       - name: app
         imagePullPolicy: Always
         image: blockfreight/blockfreight-alpha:latest
-        ports:
-        - containerPort: 46658
         env:
         - name: BFTXHOME
           value: /blockfreight-alpha
@@ -182,23 +228,33 @@ spec:
           # replace "tm-N" with public keys in genesis file
           cp /etc/app/genesis.json genesis.json
           fqdn_suffix=$(hostname -f | sed 's#[^.]*\.\(\)#\1#')
+          # for every "base/account"
+          i=0
+          length=$(cat genesis.json | jq ".app_options.accounts | length")
+          while [[ $i -lt $length ]]; do
+            # extract pod name ("tm-0")
+            pod=$(cat genesis.json | jq -r ".app_options.accounts[$i].pub_key")
 
-
-          # fill genesis file with validators
-          IFS=',' read -ra VALS_ARR <<< "$VALIDATORS"
-          fqdn_suffix=$(hostname -f | sed 's#[^.]*\.\(\)#\1#')
-          for v in "${VALS_ARR[@]}"; do
-            # wait until validator generates priv/pub key pair
+            # wait until pod starts to serve its pub_key
             set +e
 
-            curl -s --fail "http://$v.$fqdn_suffix/pub_key.json" > /dev/null
+            curl -s --fail "http://$pod.$fqdn_suffix/pub_key.json" > /dev/null
             ERR=$?
             while [ "$ERR" != 0 ]; do
               sleep 5
-              curl -s --fail "http://$v.$fqdn_suffix/pub_key.json" > /dev/null
+              curl -s --fail "http://$pod.$fqdn_suffix/pub_key.json" > /dev/null
               ERR=$?
             done
             set -e
+
+            # get its pub_key
+            curl -s "http://$pod.$fqdn_suffix/pub_key.json" | jq "." > k.json
+
+            # replace pod name with it ("tm-0" => "{"type": ..., "data": ...}")
+            cat genesis.json | jq ".app_options.accounts[$i].pub_key = $(cat k.json | jq '.')" > tmpgenesis && mv tmpgenesis genesis.json
+            rm -f k.json
+
+            i=$((i+1))
           done
 
           rm -f /socks/app.sock # remove old socket
@@ -227,7 +283,7 @@ spec:
           # => we cannot serve from /tendermint, so we copy the file
           mkdir -p /usr/share/nginx
           cp /tendermint/pub_key.json /usr/share/nginx/pub_key.json
-          # cp /app/pub_key.json /usr/share/nginx/app_pub_key.json
+          #cp /app/pub_key.json /usr/share/nginx/app_pub_key.json
           nginx -g "daemon off;"
         volumeMounts:
         - name: tmdir
@@ -244,7 +300,7 @@ spec:
           name: bftx-config
       - name: appconfigdir
         configMap:
-          name: bftx-config
+          name: app-config
       - name: socksdir
         emptyDir: {}
 
