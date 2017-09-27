@@ -14,6 +14,9 @@ spec:
   - port: 46657
     name: rpc
     protocol: TCP
+  - port: 46658
+    name: app
+    protocol: TCP
   clusterIP: None
   selector:
     app: bftx
@@ -197,7 +200,7 @@ spec:
           done
           seeds=$(IFS=','; echo "${seeds[*]}")
 
-          tendermint node --p2p.seeds="$seeds" --moniker="`hostname`" --proxy_app="unix:///socks/app.sock"
+          tendermint node --p2p.seeds="$seeds" --moniker="`hostname`" --proxy_app="127.0.0.1:46658"
         volumeMounts:
         - name: tmdir
           mountPath: /tendermint
@@ -210,6 +213,8 @@ spec:
       - name: app
         imagePullPolicy: Always
         image: blockfreight/blockfreight-alpha:latest
+        ports:
+          - containerPort: 46658
         env:
         - name: BFTXHOME
           value: /blockfreight-alpha
@@ -259,7 +264,7 @@ spec:
 
           rm -f /socks/app.sock # remove old socket
 
-          bftnode start --addr="unix:///socks/app.sock"
+            bftnode start
         volumeMounts:
         - name: appdir
           mountPath: /app
