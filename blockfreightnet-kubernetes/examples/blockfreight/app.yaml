@@ -200,7 +200,7 @@ spec:
           done
           seeds=$(IFS=','; echo "${seeds[*]}")
 
-          tendermint node --p2p.seeds="$seeds" --moniker="`hostname`" --proxy_app="127.0.0.1:46658"
+          tendermint node --p2p.seeds="$seeds" --moniker="`hostname`" --proxy_app="tcp://127.0.0.1:46658"
         volumeMounts:
         - name: tmdir
           mountPath: /tendermint
