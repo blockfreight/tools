@@ -132,6 +132,20 @@ spec:
           "volumeMounts": [
             {"name": "tmdir", "mountPath": "/tendermint"}
           ]
+        },
+        {
+          "name": "app-gen-key",
+          "image": "blockfreight/blockfreight-alpha:latest",
+          "imagePullPolicy": "Always",
+          "command": ["bash", "-c", "
+            set -ex\n
+            bftnode new_key > /app/key.json\n
+            # pub_key.json will be served by app-pub-key container\n
+            cat /app/key.json | jq .pub_key > /app/pub_key.json\n
+          "],
+          "volumeMounts": [
+            {"name": "appdir", "mountPath": "/app"}
+          ]
         }]'
     spec:
       containers:
@@ -243,17 +257,17 @@ spec:
             # wait until pod starts to serve its pub_key
             set +e
 
-            curl -s --fail "http://$pod.$fqdn_suffix/pub_key.json" > /dev/null
+            curl -s --fail "http://$pod.$fqdn_suffix/app_pub_key.json" > /dev/null
             ERR=$?
             while [ "$ERR" != 0 ]; do
               sleep 5
-              curl -s --fail "http://$pod.$fqdn_suffix/pub_key.json" > /dev/null
+              curl -s --fail "http://$pod.$fqdn_suffix/app_pub_key.json" > /dev/null
               ERR=$?
             done
             set -e
 
             # get its pub_key
-            curl -s "http://$pod.$fqdn_suffix/pub_key.json" | jq "." > k.json
+            curl -s "http://$pod.$fqdn_suffix/app_pub_key.json" | jq "." > k.json
 
             # replace pod name with it ("tm-0" => "{"type": ..., "data": ...}")
             cat genesis.json | jq ".app_options.accounts[$i].pub_key = $(cat k.json | jq '.')" > tmpgenesis && mv tmpgenesis genesis.json
@@ -288,7 +302,7 @@ spec:
           # => we cannot serve from /tendermint, so we copy the file
           mkdir -p /usr/share/nginx
           cp /tendermint/pub_key.json /usr/share/nginx/pub_key.json
-          #cp /app/pub_key.json /usr/share/nginx/app_pub_key.json
+          cp /app/pub_key.json /usr/share/nginx/app_pub_key.json
           nginx -g "daemon off;"
         volumeMounts:
         - name: tmdir
