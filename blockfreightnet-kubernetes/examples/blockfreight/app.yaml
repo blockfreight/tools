@@ -13,10 +13,6 @@ spec:
     name: p2p
   - port: 46657
     name: rpc
-    protocol: TCP
-  - port: 46658
-    name: app
-    protocol: TCP
   clusterIP: None
   selector:
     app: bftx
@@ -56,39 +52,21 @@ data:
         "accounts": [
           {
             "pub_key": "bftx-0",
-            "coins": [
-              {
-                "denom": "mycoin",
-                "amount": 1000000000
-              }
-            ]
+              "Type":"object","Properties":{"Shipper":{"Type":"VLX454323F"},"Bol_Num":{"Type":15554},"Ref_Num":{"Type":154532165},"Consignee":{"Type":""},"Vessel":{"Type":132153456},"Port_of_Loading":{"Type":21514},"Port_of_Discharge":{"Type":51651},"Notify_Address":{"Type":"89-91 City Rd, Southbank 3006, VIC, Australia"},"Desc_of_Goods":{"Type":"This is the goods description."},"Gross_Weight":{"Type":15523},"Freight_Payable_Amt":{"Type":354534},"Freight_Adv_Amt":{"Type":35448552},"General_Instructions":{"Type":"There are many general instructions."},"Date_Shipped":{"Type":20161128,"Format":"date-time"},"Issue_Details":{"Type":"object","Properties":{"Place_of_Issue":{"Type":"Melbourne, Australia"},"Date_of_Issue":{"Type":20161128,"Format":"date-time"}}},"Num_Bol":{"Type":54684010805},"Master_Info":{"Type":"object","Properties":{"First_Name":{"Type":"Master First Name"},"Last_Name":{"Type":"Master Last Name"},"Sig":{"Type":""}}},"Agent_for_Master":{"Type":"object","Properties":{"First_Name":{"Type":"Agent First Name"},"Last_Name":{"Type":"Agent Last Name"},"Sig":{"Type":""}}},"Agent_for_Owner":{"Type":"object","Properties":{"First_Name":{"Type":"Owner First Name"},"Last_Name":{"Type":"Owner Last Name"},"Sig":{"Type":""},"Conditions_for_Carriage":{"Type":"There are the carriage conditions."}}}},"Id":"6cfe5d9e64995953e1941331d93fe0464ff633b49b76e118d237eac237217d4e","PrivateKey":{"Curve":null,"X":74872605968326513813640819827029088867536824131736655385943377933063470927755,"Y":74169953490418118936258226971678637612774441480490590380528644516622620506811,"D":94103966548193441837025018525051725736316925460670810081230278378473583523752},"Signhash":"mEEl+dfNAXCgtAgFNnZjgg==","Signature":"7516513878239122183104497622763227195154250219207219513285238218432442413799520711321860802195362081745662130221184203246831426921634320813527518471339317618267","Verified":true,"Transmitted":true,"Amendment":""
+
           },
           {
             "pub_key": "bftx-1",
-            "coins": [
-              {
-                "denom": "mycoin",
-                "amount": 1000000000
-              }
-            ]
+              "Type":"object","Properties":{"Shipper":{"Type":"VLX454323F"},"Bol_Num":{"Type":15554},"Ref_Num":{"Type":154532165},"Consignee":{"Type":""},"Vessel":{"Type":132153456},"Port_of_Loading":{"Type":21514},"Port_of_Discharge":{"Type":51651},"Notify_Address":{"Type":"89-91 City Rd, Southbank 3006, VIC, Australia"},"Desc_of_Goods":{"Type":"This is the goods description."},"Gross_Weight":{"Type":15523},"Freight_Payable_Amt":{"Type":354534},"Freight_Adv_Amt":{"Type":35448552},"General_Instructions":{"Type":"There are many general instructions."},"Date_Shipped":{"Type":20161128,"Format":"date-time"},"Issue_Details":{"Type":"object","Properties":{"Place_of_Issue":{"Type":"Melbourne, Australia"},"Date_of_Issue":{"Type":20161128,"Format":"date-time"}}},"Num_Bol":{"Type":54684010805},"Master_Info":{"Type":"object","Properties":{"First_Name":{"Type":"Master First Name"},"Last_Name":{"Type":"Master Last Name"},"Sig":{"Type":""}}},"Agent_for_Master":{"Type":"object","Properties":{"First_Name":{"Type":"Agent First Name"},"Last_Name":{"Type":"Agent Last Name"},"Sig":{"Type":""}}},"Agent_for_Owner":{"Type":"object","Properties":{"First_Name":{"Type":"Owner First Name"},"Last_Name":{"Type":"Owner Last Name"},"Sig":{"Type":""},"Conditions_for_Carriage":{"Type":"There are the carriage conditions."}}}},"Id":"6cfe5d9e64995953e1941331d93fe0464ff633b49b76e118d237eac237217d4e","PrivateKey":{"Curve":null,"X":74872605968326513813640819827029088867536824131736655385943377933063470927755,"Y":74169953490418118936258226971678637612774441480490590380528644516622620506811,"D":94103966548193441837025018525051725736316925460670810081230278378473583523752},"Signhash":"mEEl+dfNAXCgtAgFNnZjgg==","Signature":"7516513878239122183104497622763227195154250219207219513285238218432442413799520711321860802195362081745662130221184203246831426921634320813527518471339317618267","Verified":true,"Transmitted":true,"Amendment":""
           },
           {
             "pub_key": "bftx-2",
-            "coins": [
-              {
-                "denom": "mycoin",
-                "amount": 1000000000
-              }
-            ]
+              "Type":"object","Properties":{"Shipper":{"Type":"VLX454323F"},"Bol_Num":{"Type":15554},"Ref_Num":{"Type":154532165},"Consignee":{"Type":""},"Vessel":{"Type":132153456},"Port_of_Loading":{"Type":21514},"Port_of_Discharge":{"Type":51651},"Notify_Address":{"Type":"89-91 City Rd, Southbank 3006, VIC, Australia"},"Desc_of_Goods":{"Type":"This is the goods description."},"Gross_Weight":{"Type":15523},"Freight_Payable_Amt":{"Type":354534},"Freight_Adv_Amt":{"Type":35448552},"General_Instructions":{"Type":"There are many general instructions."},"Date_Shipped":{"Type":20161128,"Format":"date-time"},"Issue_Details":{"Type":"object","Properties":{"Place_of_Issue":{"Type":"Melbourne, Australia"},"Date_of_Issue":{"Type":20161128,"Format":"date-time"}}},"Num_Bol":{"Type":54684010805},"Master_Info":{"Type":"object","Properties":{"First_Name":{"Type":"Master First Name"},"Last_Name":{"Type":"Master Last Name"},"Sig":{"Type":""}}},"Agent_for_Master":{"Type":"object","Properties":{"First_Name":{"Type":"Agent First Name"},"Last_Name":{"Type":"Agent Last Name"},"Sig":{"Type":""}}},"Agent_for_Owner":{"Type":"object","Properties":{"First_Name":{"Type":"Owner First Name"},"Last_Name":{"Type":"Owner Last Name"},"Sig":{"Type":""},"Conditions_for_Carriage":{"Type":"There are the carriage conditions."}}}},"Id":"6cfe5d9e64995953e1941331d93fe0464ff633b49b76e118d237eac237217d4e","PrivateKey":{"Curve":null,"X":74872605968326513813640819827029088867536824131736655385943377933063470927755,"Y":74169953490418118936258226971678637612774441480490590380528644516622620506811,"D":94103966548193441837025018525051725736316925460670810081230278378473583523752},"Signhash":"mEEl+dfNAXCgtAgFNnZjgg==","Signature":"7516513878239122183104497622763227195154250219207219513285238218432442413799520711321860802195362081745662130221184203246831426921634320813527518471339317618267","Verified":true,"Transmitted":true,"Amendment":""
+
           },
           {
             "pub_key": "bftx-3",
-            "coins": [
-              {
-                "denom": "mycoin",
-                "amount": 1000000000
-              }
-            ]
+              "Type":"object","Properties":{"Shipper":{"Type":"VLX454323F"},"Bol_Num":{"Type":15554},"Ref_Num":{"Type":154532165},"Consignee":{"Type":""},"Vessel":{"Type":132153456},"Port_of_Loading":{"Type":21514},"Port_of_Discharge":{"Type":51651},"Notify_Address":{"Type":"89-91 City Rd, Southbank 3006, VIC, Australia"},"Desc_of_Goods":{"Type":"This is the goods description."},"Gross_Weight":{"Type":15523},"Freight_Payable_Amt":{"Type":354534},"Freight_Adv_Amt":{"Type":35448552},"General_Instructions":{"Type":"There are many general instructions."},"Date_Shipped":{"Type":20161128,"Format":"date-time"},"Issue_Details":{"Type":"object","Properties":{"Place_of_Issue":{"Type":"Melbourne, Australia"},"Date_of_Issue":{"Type":20161128,"Format":"date-time"}}},"Num_Bol":{"Type":54684010805},"Master_Info":{"Type":"object","Properties":{"First_Name":{"Type":"Master First Name"},"Last_Name":{"Type":"Master Last Name"},"Sig":{"Type":""}}},"Agent_for_Master":{"Type":"object","Properties":{"First_Name":{"Type":"Agent First Name"},"Last_Name":{"Type":"Agent Last Name"},"Sig":{"Type":""}}},"Agent_for_Owner":{"Type":"object","Properties":{"First_Name":{"Type":"Owner First Name"},"Last_Name":{"Type":"Owner Last Name"},"Sig":{"Type":""},"Conditions_for_Carriage":{"Type":"There are the carriage conditions."}}}},"Id":"6cfe5d9e64995953e1941331d93fe0464ff633b49b76e118d237eac237217d4e","PrivateKey":{"Curve":null,"X":74872605968326513813640819827029088867536824131736655385943377933063470927755,"Y":74169953490418118936258226971678637612774441480490590380528644516622620506811,"D":94103966548193441837025018525051725736316925460670810081230278378473583523752},"Signhash":"mEEl+dfNAXCgtAgFNnZjgg==","Signature":"7516513878239122183104497622763227195154250219207219513285238218432442413799520711321860802195362081745662130221184203246831426921634320813527518471339317618267","Verified":true,"Transmitted":true,"Amendment":""
           }
         ]
       }
@@ -115,7 +93,6 @@ spec:
     metadata:
       labels:
         app: bftx
-        version: v0.3.0
       annotations:
         pod.beta.kubernetes.io/init-containers: '[{
           "name": "tm-gen-validator",
@@ -150,7 +127,7 @@ spec:
     spec:
       containers:
       - name: tm
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         image: tendermint/tendermint:0.10.0
         ports:
         - containerPort: 46656
@@ -181,6 +158,7 @@ spec:
         - |
           set -ex
 
+          sleep 15
           # copy template
           cp /etc/tendermint/genesis.json /tendermint/genesis.json
 
@@ -227,23 +205,15 @@ spec:
       - name: app
         imagePullPolicy: Always
         image: blockfreight/blockfreight-alpha:latest
-        ports:
-          - containerPort: 46658
         env:
         - name: BFTXHOME
           value: /blockfreight-alpha
-        - name: VALIDATORS
-          valueFrom:
-            configMapKeyRef:
-              name: bftx-config
-              key: validators
         workingDir: /blockfreight-alpha
         command:
         - bash
         - "-c"
         - |
           set -ex
-
           # replace "tm-N" with public keys in genesis file
           cp /etc/app/genesis.json genesis.json
           fqdn_suffix=$(hostname -f | sed 's#[^.]*\.\(\)#\1#')
@@ -278,7 +248,7 @@ spec:
 
           rm -f /socks/app.sock # remove old socket
 
-            bftnode start
+          bftnode start 
         volumeMounts:
         - name: appdir
           mountPath: /app
