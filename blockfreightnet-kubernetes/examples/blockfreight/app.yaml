@@ -43,35 +43,53 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: app-config
-data:
-  genesis.json: |-
-    {
-      "chain_id": "chain-idealX",
-      "app_options": {
-        "accounts": [
+    name: app-config
+    data:
+        genesis.json: |-
           {
-            "pub_key": "bftx-0",
-              "Type":"object","Properties":{"Shipper":{"Type":"VLX454323F"},"Bol_Num":{"Type":15554},"Ref_Num":{"Type":154532165},"Consignee":{"Type":""},"Vessel":{"Type":132153456},"Port_of_Loading":{"Type":21514},"Port_of_Discharge":{"Type":51651},"Notify_Address":{"Type":"89-91 City Rd, Southbank 3006, VIC, Australia"},"Desc_of_Goods":{"Type":"This is the goods description."},"Gross_Weight":{"Type":15523},"Freight_Payable_Amt":{"Type":354534},"Freight_Adv_Amt":{"Type":35448552},"General_Instructions":{"Type":"There are many general instructions."},"Date_Shipped":{"Type":20161128,"Format":"date-time"},"Issue_Details":{"Type":"object","Properties":{"Place_of_Issue":{"Type":"Melbourne, Australia"},"Date_of_Issue":{"Type":20161128,"Format":"date-time"}}},"Num_Bol":{"Type":54684010805},"Master_Info":{"Type":"object","Properties":{"First_Name":{"Type":"Master First Name"},"Last_Name":{"Type":"Master Last Name"},"Sig":{"Type":""}}},"Agent_for_Master":{"Type":"object","Properties":{"First_Name":{"Type":"Agent First Name"},"Last_Name":{"Type":"Agent Last Name"},"Sig":{"Type":""}}},"Agent_for_Owner":{"Type":"object","Properties":{"First_Name":{"Type":"Owner First Name"},"Last_Name":{"Type":"Owner Last Name"},"Sig":{"Type":""},"Conditions_for_Carriage":{"Type":"There are the carriage conditions."}}}},"Id":"6cfe5d9e64995953e1941331d93fe0464ff633b49b76e118d237eac237217d4e","PrivateKey":{"Curve":null,"X":74872605968326513813640819827029088867536824131736655385943377933063470927755,"Y":74169953490418118936258226971678637612774441480490590380528644516622620506811,"D":94103966548193441837025018525051725736316925460670810081230278378473583523752},"Signhash":"mEEl+dfNAXCgtAgFNnZjgg==","Signature":"7516513878239122183104497622763227195154250219207219513285238218432442413799520711321860802195362081745662130221184203246831426921634320813527518471339317618267","Verified":true,"Transmitted":true,"Amendment":""
-
-          },
-          {
-            "pub_key": "bftx-1",
-              "Type":"object","Properties":{"Shipper":{"Type":"VLX454323F"},"Bol_Num":{"Type":15554},"Ref_Num":{"Type":154532165},"Consignee":{"Type":""},"Vessel":{"Type":132153456},"Port_of_Loading":{"Type":21514},"Port_of_Discharge":{"Type":51651},"Notify_Address":{"Type":"89-91 City Rd, Southbank 3006, VIC, Australia"},"Desc_of_Goods":{"Type":"This is the goods description."},"Gross_Weight":{"Type":15523},"Freight_Payable_Amt":{"Type":354534},"Freight_Adv_Amt":{"Type":35448552},"General_Instructions":{"Type":"There are many general instructions."},"Date_Shipped":{"Type":20161128,"Format":"date-time"},"Issue_Details":{"Type":"object","Properties":{"Place_of_Issue":{"Type":"Melbourne, Australia"},"Date_of_Issue":{"Type":20161128,"Format":"date-time"}}},"Num_Bol":{"Type":54684010805},"Master_Info":{"Type":"object","Properties":{"First_Name":{"Type":"Master First Name"},"Last_Name":{"Type":"Master Last Name"},"Sig":{"Type":""}}},"Agent_for_Master":{"Type":"object","Properties":{"First_Name":{"Type":"Agent First Name"},"Last_Name":{"Type":"Agent Last Name"},"Sig":{"Type":""}}},"Agent_for_Owner":{"Type":"object","Properties":{"First_Name":{"Type":"Owner First Name"},"Last_Name":{"Type":"Owner Last Name"},"Sig":{"Type":""},"Conditions_for_Carriage":{"Type":"There are the carriage conditions."}}}},"Id":"6cfe5d9e64995953e1941331d93fe0464ff633b49b76e118d237eac237217d4e","PrivateKey":{"Curve":null,"X":74872605968326513813640819827029088867536824131736655385943377933063470927755,"Y":74169953490418118936258226971678637612774441480490590380528644516622620506811,"D":94103966548193441837025018525051725736316925460670810081230278378473583523752},"Signhash":"mEEl+dfNAXCgtAgFNnZjgg==","Signature":"7516513878239122183104497622763227195154250219207219513285238218432442413799520711321860802195362081745662130221184203246831426921634320813527518471339317618267","Verified":true,"Transmitted":true,"Amendment":""
-          },
-          {
-            "pub_key": "bftx-2",
-              "Type":"object","Properties":{"Shipper":{"Type":"VLX454323F"},"Bol_Num":{"Type":15554},"Ref_Num":{"Type":154532165},"Consignee":{"Type":""},"Vessel":{"Type":132153456},"Port_of_Loading":{"Type":21514},"Port_of_Discharge":{"Type":51651},"Notify_Address":{"Type":"89-91 City Rd, Southbank 3006, VIC, Australia"},"Desc_of_Goods":{"Type":"This is the goods description."},"Gross_Weight":{"Type":15523},"Freight_Payable_Amt":{"Type":354534},"Freight_Adv_Amt":{"Type":35448552},"General_Instructions":{"Type":"There are many general instructions."},"Date_Shipped":{"Type":20161128,"Format":"date-time"},"Issue_Details":{"Type":"object","Properties":{"Place_of_Issue":{"Type":"Melbourne, Australia"},"Date_of_Issue":{"Type":20161128,"Format":"date-time"}}},"Num_Bol":{"Type":54684010805},"Master_Info":{"Type":"object","Properties":{"First_Name":{"Type":"Master First Name"},"Last_Name":{"Type":"Master Last Name"},"Sig":{"Type":""}}},"Agent_for_Master":{"Type":"object","Properties":{"First_Name":{"Type":"Agent First Name"},"Last_Name":{"Type":"Agent Last Name"},"Sig":{"Type":""}}},"Agent_for_Owner":{"Type":"object","Properties":{"First_Name":{"Type":"Owner First Name"},"Last_Name":{"Type":"Owner Last Name"},"Sig":{"Type":""},"Conditions_for_Carriage":{"Type":"There are the carriage conditions."}}}},"Id":"6cfe5d9e64995953e1941331d93fe0464ff633b49b76e118d237eac237217d4e","PrivateKey":{"Curve":null,"X":74872605968326513813640819827029088867536824131736655385943377933063470927755,"Y":74169953490418118936258226971678637612774441480490590380528644516622620506811,"D":94103966548193441837025018525051725736316925460670810081230278378473583523752},"Signhash":"mEEl+dfNAXCgtAgFNnZjgg==","Signature":"7516513878239122183104497622763227195154250219207219513285238218432442413799520711321860802195362081745662130221184203246831426921634320813527518471339317618267","Verified":true,"Transmitted":true,"Amendment":""
-
-          },
-          {
-            "pub_key": "bftx-3",
-              "Type":"object","Properties":{"Shipper":{"Type":"VLX454323F"},"Bol_Num":{"Type":15554},"Ref_Num":{"Type":154532165},"Consignee":{"Type":""},"Vessel":{"Type":132153456},"Port_of_Loading":{"Type":21514},"Port_of_Discharge":{"Type":51651},"Notify_Address":{"Type":"89-91 City Rd, Southbank 3006, VIC, Australia"},"Desc_of_Goods":{"Type":"This is the goods description."},"Gross_Weight":{"Type":15523},"Freight_Payable_Amt":{"Type":354534},"Freight_Adv_Amt":{"Type":35448552},"General_Instructions":{"Type":"There are many general instructions."},"Date_Shipped":{"Type":20161128,"Format":"date-time"},"Issue_Details":{"Type":"object","Properties":{"Place_of_Issue":{"Type":"Melbourne, Australia"},"Date_of_Issue":{"Type":20161128,"Format":"date-time"}}},"Num_Bol":{"Type":54684010805},"Master_Info":{"Type":"object","Properties":{"First_Name":{"Type":"Master First Name"},"Last_Name":{"Type":"Master Last Name"},"Sig":{"Type":""}}},"Agent_for_Master":{"Type":"object","Properties":{"First_Name":{"Type":"Agent First Name"},"Last_Name":{"Type":"Agent Last Name"},"Sig":{"Type":""}}},"Agent_for_Owner":{"Type":"object","Properties":{"First_Name":{"Type":"Owner First Name"},"Last_Name":{"Type":"Owner Last Name"},"Sig":{"Type":""},"Conditions_for_Carriage":{"Type":"There are the carriage conditions."}}}},"Id":"6cfe5d9e64995953e1941331d93fe0464ff633b49b76e118d237eac237217d4e","PrivateKey":{"Curve":null,"X":74872605968326513813640819827029088867536824131736655385943377933063470927755,"Y":74169953490418118936258226971678637612774441480490590380528644516622620506811,"D":94103966548193441837025018525051725736316925460670810081230278378473583523752},"Signhash":"mEEl+dfNAXCgtAgFNnZjgg==","Signature":"7516513878239122183104497622763227195154250219207219513285238218432442413799520711321860802195362081745662130221184203246831426921634320813527518471339317618267","Verified":true,"Transmitted":true,"Amendment":""
-          }
-        ]
-      }
-    }
----
+            "chain_id": "chain-idealX",
+            "app_options": {
+              "accounts": [
+                {
+                  "pub_key": "bftx-0",
+                  "coins": [
+                    {
+                      "denom": "mycoin",
+                      "amount": 1000000000
+                      }
+                      ]
+                      },
+                      {
+                        "pub_key": "bftx-1",
+                        "coins": [
+                          {
+                            "denom": "mycoin",
+                            "amount": 1000000000
+                            }
+                        ]
+                        },
+                        {
+                          "pub_key": "bftx-2",
+                          "coins": [
+                            {
+                              "denom": "mycoin",
+                              "amount": 1000000000
+                              }
+                              ]
+                              },
+                              {
+                                "pub_key": "bftx-3",
+                                "coins": [
+                                  {
+                                    "denom": "mycoin",
+                                    "amount": 1000000000
+                                    }
+                                    ]
+                                    }
+                                    ]
+                                  }
+                            }
+                            ---
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
@@ -100,6 +118,8 @@ spec:
           "imagePullPolicy": "IfNotPresent",
           "command": ["bash", "-c", "
             set -ex\n
+            rm -rf /tendermint/data\n
+            tendermint unsafe_reset_priv_validator\n
             if [ ! -f /tendermint/priv_validator.json ]; then\n
               tendermint gen_validator > /tendermint/priv_validator.json\n
               # pub_key.json will be served by pub-key container\n
@@ -158,7 +178,6 @@ spec:
         - |
           set -ex
 
-          sleep 15
           # copy template
           cp /etc/tendermint/genesis.json /tendermint/genesis.json
 
