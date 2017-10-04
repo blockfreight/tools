@@ -132,7 +132,7 @@ spec:
         },
         {
           "name": "app-gen-key",
-          "image": "blockfreight/blockfreight-alpha:latest",
+          "image": "blockfreight/blockfreight-alpha:develop",
           "imagePullPolicy": "Always",
           "command": ["bash", "-c", "
             set -ex\n
