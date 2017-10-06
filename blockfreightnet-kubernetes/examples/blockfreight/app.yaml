@@ -223,7 +223,7 @@ spec:
 
       - name: app
         imagePullPolicy: Always
-        image: blockfreight/blockfreight-alpha:latest
+        image: blockfreight/blockfreight-alpha:develop
         env:
         - name: BFTXHOME
           value: /blockfreight-alpha
