@@ -1,6 +1,6 @@
 # Blockfreight™ example
 
-This is an example of using [blockfreight](https://github.com/blockfreight/blockfreight-alpha).
+This is an example of using [blockfreight](https://github.com/blockfreight/go-bftx).
 
 ## Usage
 

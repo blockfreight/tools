@@ -37,7 +37,7 @@ cd ..
 ###
 if [ -n "$GOPATH" ]; then
   go get -u github.com/tendermint/tendermint/cmd/tendermint
-  go get -u github.com/blockfreight/blockfreight-alpha
+  go get -u github.com/blockfreight/go-bftx
   ANSIBLE_ADDITIONAL_VARS="-e tendermint_release_install=false"
 fi
 
