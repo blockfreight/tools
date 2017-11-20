@@ -1,0 +1,79 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+  name: armory
+  labels:
+    app: armory
+spec:
+  ports:
+  - port: 14000
+  selector:
+    app: ctp
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: armory
+spec:
+  serviceName: armory
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: ctp
+      annotations:
+        pod.beta.kubernetes.io/init-containers: '[]'
+    spec:
+      containers:
+      - name: ctpbase
+        imagePullPolicy: IfNotPresent
+        image: counterparty/armory-utxsvr
+        ports:
+        - containerPort: 14000
+        env:
+        - name: BITCOIND_URL
+          value: http://rpc:rpc@bitcoin-testnet:18332
+        - name: RPC_HOST
+          value: 0.0.0.0
+        - name: PARAMS
+          value: --testnet 
+        volumeMounts:
+          - mountPath: /armory-utxsvr
+            name: armory-src
+          - mountPath: /root/.armory
+            name: armory-data
+          - mountPath: /root/.bitcoin/
+            name: bitcoin-data
+      
+  
+  volumeClaimTemplates:
+  - metadata:
+      name: armory-src
+      annotations:
+        volume.alpha.kubernetes.io/storage-class: anything
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 2Gi
+  - metadata:
+      name: armory-data
+      annotations:
+        volume.alpha.kubernetes.io/storage-class: anything
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 2Gi
+  - metadata:
+      name: bitcoin-data
+      annotations:
+        volume.alpha.kubernetes.io/storage-class: anything
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 2Gi
