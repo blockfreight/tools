@@ -19,7 +19,7 @@ metadata:
   name: counterparty-server
 spec:
   serviceName: counterparty-server
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -31,16 +31,13 @@ spec:
       - name: ctpbase
         imagePullPolicy: IfNotPresent
         image: counterparty/counterparty-server
+        workingDir: /counterparty-cli
         ports:
         - containerPort: 14000
         env:
         - name: PARAMS
-          value: --config-file=/root/.config/counterparty/server.testnet.conf  
+          value: --config-file=/root/.config/counterparty/server.testnet.conf          
         volumeMounts:
-          - mountPath: /counterparty-lib
-            name: counterparty-lib
-          - mountPath: /counterparty-cli
-            name: counterparty-cli
           - mountPath: /root/.config/counterparty
             name: counterparty-config
           - mountPath: /root/.local/share/counterparty
@@ -48,24 +45,6 @@ spec:
       
   
   volumeClaimTemplates:
-  - metadata:
-      name: counterparty-lib
-      annotations:
-        volume.alpha.kubernetes.io/storage-class: anything
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 2Gi
-  - metadata:
-      name: counterparty-cli
-      annotations:
-        volume.alpha.kubernetes.io/storage-class: anything
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 2Gi
   - metadata:
       name: counterparty-config
       annotations:
