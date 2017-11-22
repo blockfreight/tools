@@ -1,0 +1,105 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+  name: federeatednode
+  labels:
+    app: federeatednode
+spec:
+  ports:
+  - port: 14000
+    name: cpserver
+  clusterIP: None
+  selector:
+    app: fednode
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: mongo
+  name: mongo
+spec:
+  ports:
+    - port: 27017
+      targetPort: 27017
+  selector:
+    name: mongo
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: fednode
+spec:
+  serviceName: federeatednode
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: fednode
+      annotations:
+        pod.beta.kubernetes.io/init-containers: '[]'
+    spec:
+      containers:
+      - name: counterpartyserver
+        imagePullPolicy: IfNotPresent
+        image: counterparty/counterparty-server
+        workingDir: /counterparty-cli
+        ports:
+        - containerPort: 14000
+          name: cpserver
+        env:
+        - name: PARAMS
+          value: --config-file=/root/.config/counterparty/server.testnet.conf
+        volumeMounts:
+          - mountPath: /root/.config/counterparty
+            name: counterparty-config
+          - mountPath: /root/.local/share/counterparty
+            name: counterparty-data
+
+      - name: mongo
+        image: mongo
+        command:
+          - mongod
+          - "--replSet"
+          - rs0
+          - "--smallfiles"
+          - "--noprealloc"
+        ports:
+          - containerPort: 27017
+        volumeMounts:
+          - name: mongo-persistent-storage
+            mountPath: /data/db
+
+
+              
+  volumeClaimTemplates:
+    - metadata:
+        name: mongo-persistent-storage
+        annotations:
+          volume.alpha.kubernetes.io/storage-class: "anything"
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 100Gi
+    - metadata:
+        name: counterparty-config
+        annotations:
+          volume.alpha.kubernetes.io/storage-class: "anything"
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 2Gi
+    - metadata:
+        name: counterparty-data
+        annotations:
+          volume.alpha.kubernetes.io/storage-class: "anything"
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 2Gi
