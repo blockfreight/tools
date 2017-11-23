@@ -29,6 +29,20 @@ spec:
     name: mongo
 ---
 apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+  name: counterparty-bitcoin
+  labels:
+    app: counterparty-bitcoin
+spec:
+  ports:
+  - port: 18332
+  selector:
+    app: ctpbitcoin
+---
+apiVersion: v1
 data:
   redis-config: |
     maxmemory 2mb
@@ -102,7 +116,19 @@ spec:
           - mountPath: /redis-master
             name: config      
 
-
+      - name: counterparty-bitcoin
+        imagePullPolicy: IfNotPresent
+        image: counterparty/bitcoin
+        ports:
+        - containerPort: 18332
+        env:
+        - name: PARAMS
+          value: -conf=/root/.bitcoin-config/bitcoin.testnet.conf  
+        volumeMounts:
+          - mountPath: /root/.bitcoin-config
+            name: bitcoin-config
+          - mountPath: /root/.bitcoin/
+            name: bitcoin-data
               
   volumeClaimTemplates:
     - metadata:
@@ -150,3 +176,21 @@ spec:
         resources:
           requests:
             storage: 2Gi            
+    - metadata:
+        name: bitcoin-data
+        annotations:
+          volume.alpha.kubernetes.io/storage-class: anything
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 2Gi
+    - metadata:
+        name: bitcoin-config
+        annotations:
+          volume.alpha.kubernetes.io/storage-class: anything
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 12Mi
