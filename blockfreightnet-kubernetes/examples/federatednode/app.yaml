@@ -184,20 +184,10 @@ spec:
       containers:
       - image: counterparty/bitcoin
         name: bitcoin-base
+        ports:
+        - containerPort: 8332
         resources: {}
-        volumeMounts:
-        - mountPath: /root/.bitcoin-config
-          name: bitcoin-base-claim0
-        - mountPath: /root/.bitcoin/
-          name: bitcoin-data
       restartPolicy: Always
-      volumes:
-      - name: bitcoin-base-claim0
-        persistentVolumeClaim:
-          claimName: bitcoin-base-claim0
-      - name: bitcoin-data
-        persistentVolumeClaim:
-          claimName: bitcoin-data
 status: {}
 ---
 apiVersion: v1
@@ -213,9 +203,9 @@ metadata:
 spec:
   clusterIP: None
   ports:
-  - name: headless
-    port: 55555
-    targetPort: 0
+  - name: "8332"
+    port: 8332
+    targetPort: 8332
   selector:
     io.kompose.service: bitcoin-base
 status:
@@ -347,6 +337,7 @@ spec:
           chmod a+x /usr/local/bin/start.sh
 
           counterparty-server bootstrap --quiet
+          counterparty-server --backend-user=rpc --backend-password=rpc --backend-connect=bitcoin-base start
         ports:
         - containerPort: 4000
         resources: {}
@@ -564,7 +555,7 @@ spec:
       containers:
       - env:
         - name: BITCOIND_URL
-          value: http://rpc:rpc@bitcoin:8332
+          value: http://rpc:rpc@bitcoin-base:8332
         - name: RPC_HOST
           value: 0.0.0.0
         image: 'counterparty/armory-utxsvr'
