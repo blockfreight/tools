@@ -336,7 +336,7 @@ spec:
           cp docker/start.sh /usr/local/bin/start.sh
           chmod a+x /usr/local/bin/start.sh
 
-          counterparty-server bootstrap --quiet
+          counterparty-server bootstrap
           counterparty-server --backend-user=rpc --backend-password=rpc --backend-connect=bitcoin-base start
         ports:
         - containerPort: 4000
@@ -691,5 +691,122 @@ spec:
     targetPort: 443
   selector:
     io.kompose.service: counterwallet
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: counterblock-testnet-claim0
+  name: counterblock-testnet-claim0
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: counterblock-testnet-claim1
+  name: counterblock-testnet-claim1
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.full.yml
+    kompose.version: 1.5.0 ()
+  creationTimestamp: null
+  labels:
+    io.kompose.service: counterblock-testnet
+  name: counterblock-testnet
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: counterblock-testnet
+    spec:
+      containers:
+      - env:
+        - name: PARAMS
+          value: --config-file=/root/.config/counterblock/server.testnet.conf
+        image: 'counterparty/counterblock'
+        name: counterblock-testnet
+        command:
+        - bash
+        - "-c"
+        - |
+          set -ex   
+          pip3 install -r requirements.txt
+          python3 setup.py develop
+
+          cp docker/server.conf /root/.config/counterblock/server.conf
+          cp docker/modules.conf /root/.config/counterblock/modules.conf
+          cp docker/counterwallet.conf /root/.config/counterblock/counterwallet.conf
+
+          counterblock --testnet --backend-password=rpc --counterparty-password=rpc --mongodb-connect=mongodb-base:27017 --counterparty-connect=counterparty server 
+        ports:
+        - containerPort: 14100
+        - containerPort: 14101
+        - containerPort: 14102
+        resources: {}
+        volumeMounts:
+        - mountPath: /root/.config/counterblock
+          name: counterblock-testnet-claim1
+        - mountPath: /root/.local/share/counterblock
+          name: counterblock-data
+      restartPolicy: Always
+      volumes:
+      - name: counterblock-testnet-claim1
+        persistentVolumeClaim:
+          claimName: counterblock-testnet-claim1
+      - name: counterblock-data
+        persistentVolumeClaim:
+          claimName: counterblock-data
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.full.yml
+    kompose.version: 1.5.0 ()
+  creationTimestamp: null
+  labels:
+    io.kompose.service: counterblock-testnet
+  name: counterblock-testnet
+spec:
+  ports:
+  - name: "14100"
+    port: 14100
+    targetPort: 14100
+  - name: "14101"
+    port: 14101
+    targetPort: 14101
+  - name: "14102"
+    port: 14102
+    targetPort: 14102
+  selector:
+    io.kompose.service: counterblock-testnet
 status:
   loadBalancer: {}
