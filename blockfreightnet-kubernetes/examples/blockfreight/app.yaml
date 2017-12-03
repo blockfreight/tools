@@ -42,9 +42,7 @@ data:
 ---
 apiVersion: v1
 kind: ConfigMap
-metadata:
-    name: app-config
-    data:
+data:
         genesis.json: |-
           {
             "chain_id": "chain-idealX",
@@ -89,7 +87,9 @@ metadata:
                                     ]
                                   }
                             }
-                            ---
+metadata:
+    name: app-config    
+---
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
@@ -100,52 +100,38 @@ spec:
       app: bftx
   minAvailable: 2
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1beta2
 kind: StatefulSet
 metadata:
   name: bftx
 spec:
+  selector:
+    matchLabels:
+       app: bftx
   serviceName: blockfreight
   replicas: 4
   template:
     metadata:
       labels:
         app: bftx
-      annotations:
-        pod.beta.kubernetes.io/init-containers: '[{
-          "name": "tm-gen-validator",
-          "image": "tendermint/tendermint:0.10.0",
-          "imagePullPolicy": "IfNotPresent",
-          "command": ["bash", "-c", "
-            set -ex\n
-            rm -rf /tendermint/data\n
-            tendermint unsafe_reset_priv_validator\n
-            if [ ! -f /tendermint/priv_validator.json ]; then\n
-              tendermint gen_validator > /tendermint/priv_validator.json\n
-              # pub_key.json will be served by pub-key container\n
-              cat /tendermint/priv_validator.json | jq \".pub_key\" > /tendermint/pub_key.json\n
-            fi\n
-          "],
-          "volumeMounts": [
-            {"name": "tmdir", "mountPath": "/tendermint"}
-          ]
-        },
-        {
-          "name": "app-gen-key",
-          "image": "blockfreight/go-bftx:develop",
-          "imagePullPolicy": "Always",
-          "command": ["bash", "-c", "
-            set -ex\n
-            bftnode new_key > /app/key.json\n
-            # pub_key.json will be served by app-pub-key container\n
-            cat /app/key.json | jq .pub_key > /app/pub_key.json\n
-          "],
-          "volumeMounts": [
-            {"name": "appdir", "mountPath": "/app"}
-          ]
-        }]'
     spec:
-      containers:
+     initContainers:
+      - name: tm-gen-validator
+        image: tendermint/tendermint:0.10.0
+        command: ["bash", "-c", "set -ex ; rm -rf /tendermint/data; tendermint unsafe_reset_priv_validator;cat /tendermint/priv_validator.json;\n
+              tendermint gen_validator > /tendermint/priv_validator.json\n
+              cat /tendermint/priv_validator.json | jq \".pub_key\" > /tendermint/pub_key.json\n
+          "]
+        volumeMounts: 
+        - name: tmdir
+          mountPath: /tendermint
+      - name: app-gen-key
+        image: blockfreight/go-bftx:develop       
+        command: ["bash", "-c", "set -ex; bftnode new_key > /app/key.json; cat /app/key.json | jq .pub_key > /app/pub_key.json"]
+        volumeMounts: 
+          - name: appdir
+            mountPath: /app
+     containers:
       - name: tm
         imagePullPolicy: Always
         image: tendermint/tendermint:0.10.0
@@ -290,7 +276,7 @@ spec:
           # fixes 403 Permission Denied (open() "/tendermint/pub_key.json" failed (13: Permission denied))
           # => we cannot serve from /tendermint, so we copy the file
           mkdir -p /usr/share/nginx
-          cp /tendermint/pub_key.json /usr/share/nginx/pub_key.json
+          cp -r /tendermint/pub_key.json /usr/share/nginx/pub_key.json
           cp /app/pub_key.json /usr/share/nginx/app_pub_key.json
           nginx -g "daemon off;"
         volumeMounts:
@@ -302,7 +288,7 @@ spec:
           name: tmconfigdir
           subPath: pub_key_nginx.conf
 
-      volumes:
+     volumes:
       - name: tmconfigdir
         configMap:
           name: bftx-config
