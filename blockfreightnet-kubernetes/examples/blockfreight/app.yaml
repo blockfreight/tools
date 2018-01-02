@@ -132,7 +132,7 @@ spec:
         },
         {
           "name": "app-gen-key",
-          "image": "blockfreight/go-bftx:develop",
+          "image": "blockfreight/go-bftx:bootstrap",
           "imagePullPolicy": "Always",
           "command": ["bash", "-c", "
             set -ex\n
@@ -223,7 +223,9 @@ spec:
 
       - name: app
         imagePullPolicy: Always
-        image: blockfreight/go-bftx:develop
+        image: blockfreight/go-bftx:master
+        # Alternate: Use Testing Branch
+        #  image: blockfreight/go-bftx:bootstrap
         env:
         - name: BFTXHOME
           value: /go-bftx
