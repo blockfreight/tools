@@ -126,7 +126,7 @@ spec:
         - name: tmdir
           mountPath: /tendermint
       - name: app-gen-key
-        image: blockfreight/go-bftx:develop       
+        image: blockfreight/go-bftx:bootstrap       
         command: ["bash", "-c", "set -ex; bftnode new_key > /app/key.json; cat /app/key.json | jq .pub_key > /app/pub_key.json"]
         volumeMounts: 
           - name: appdir
@@ -209,7 +209,7 @@ spec:
 
       - name: app
         imagePullPolicy: Always
-        image: blockfreight/go-bftx:develop
+        image: blockfreight/go-bftx
         env:
         - name: BFTXHOME
           value: /go-bftx
@@ -265,7 +265,7 @@ spec:
 
       - name: pub-key
         imagePullPolicy: IfNotPresent
-        image: nginx:latest
+        image: nginx
         ports:
         - containerPort: 80
         command:
