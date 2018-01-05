@@ -1,0 +1,8 @@
+=============== Jan 4, 2018 (AEDT) ===============
+13:30:59.930343 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+13:30:59.932558 db@open opening
+13:30:59.937980 version@stat F·[] S·0B[] Sc·[]
+13:30:59.938411 db@janitor F·2 G·0
+13:30:59.938472 db@open done T·5.877475ms
+13:30:59.940098 db@close closing
+13:30:59.940232 db@close done T·133.447µs
