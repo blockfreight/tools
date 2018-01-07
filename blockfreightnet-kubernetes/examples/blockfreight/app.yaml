@@ -121,10 +121,9 @@ spec:
         command: ["bash", "-c", "
             set -ex\n
             if [ ! -f /tendermint/priv_validator.json ]; then\n
-              tendermint gen_validator > /tendermint/priv_validator.json\n         
-              cat /tendermint/priv_validator.json | jq \".pub_key\" > /tendermint/pub_key.json\n     
+              tendermint gen_validator > /tendermint/priv_validator.json\n                    
             fi\n
-            
+            cat /tendermint/priv_validator.json | jq \".pub_key\" > /tendermint/pub_key.json\n 
           "]
         volumeMounts: 
         - name: tmdir
@@ -136,9 +135,8 @@ spec:
             if [ ! -f /app/key.json ]; then\n
               basecoin key new > /app/key.json\n
               # pub_key.json will be served by app-pub-key container\n
-              cat /app/key.json | jq \".pub_key\" > /app/pub_key.json\n
             fi\n
-            
+            cat /app/key.json | jq \".pub_key\" > /app/pub_key.json\n
           "]
         volumeMounts: 
           - name: appdir
@@ -220,8 +218,8 @@ spec:
           mountPath: /socks
 
       - name: app
-        imagePullPolicy: Never
-        image: bftx-local
+        imagePullPolicy: Always
+        image: blockfreight/go-bftx:develop
         env:
         - name: BFTXHOME
           value: /go-bftx

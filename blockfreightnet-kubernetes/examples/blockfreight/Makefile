@@ -4,6 +4,8 @@ create:
 
 destroy:
 	@echo "==> Destroying deployment"
+	@kubectl delete pvc --all --grace-period=0 --force
+	@kubectl delete pods --all --grace-period=0 --force
 	@kubectl delete -f app.yaml
 	@kubectl delete pvc -l app=tm
 
