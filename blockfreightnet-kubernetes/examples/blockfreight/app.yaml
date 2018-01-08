@@ -219,7 +219,7 @@ spec:
 
       - name: app
         imagePullPolicy: Always
-        image: blockfreight/go-bftx:latest
+        image: blockfreight/go-bftx:develop
         # Alternate: Use Testing Branch
         #  image: blockfreight/go-bftx:bootstrap
         env:
