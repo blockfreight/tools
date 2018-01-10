@@ -144,7 +144,7 @@ spec:
      containers:
       - name: tm
         imagePullPolicy: Always
-        image: tendermint/tendermint
+        image: tendermint/tendermint:0.10.0
         ports:
         - containerPort: 46656
           name: p2p
@@ -194,7 +194,7 @@ spec:
             set -e
 
             # add validator to genesis file along with its pub_key
-            curl -s "http://$v.$fqdn_suffix/pub_key.json" | jq ". as \$k | {pub_key: \$k, power: $VALIDATOR_POWER, name: \"$v\"}" > pub_validator.json
+            curl -s "http://$v.$fqdn_suffix/pub_key.json" | jq ". as \$k | {pub_key: \$k, amount: $VALIDATOR_POWER, name: \"$v\"}" > pub_validator.json
             cat /tendermint/genesis.json | jq ".validators |= .+ [$(cat pub_validator.json)]" > tmpgenesis && mv tmpgenesis /tendermint/genesis.json
             rm pub_validator.json
           done
