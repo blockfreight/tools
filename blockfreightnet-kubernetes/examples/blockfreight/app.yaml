@@ -224,8 +224,8 @@ spec:
         #  image: blockfreight/go-bftx:bootstrap
         env:
         - name: BFTXHOME
-          value: /go-bftx
-        workingDir: /go-bftx
+          value: /go/src/github.com/blockfreight/go-bftx
+        workingDir: /go/src/github.com/blockfreight/go-bftx
         command:
         - bash
         - "-c"
