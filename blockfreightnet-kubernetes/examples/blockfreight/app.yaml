@@ -144,7 +144,7 @@ spec:
      containers:
       - name: tm
         imagePullPolicy: Always
-        image: tendermint/tendermint:0.10.0
+        image: tendermint/tendermint:0.15.0
         ports:
         - containerPort: 46656
           name: p2p
@@ -194,7 +194,7 @@ spec:
             set -e
 
             # add validator to genesis file along with its pub_key
-            curl -s "http://$v.$fqdn_suffix/pub_key.json" | jq ". as \$k | {pub_key: \$k, amount: $VALIDATOR_POWER, name: \"$v\"}" > pub_validator.json
+            curl -s "http://$v.$fqdn_suffix/pub_key.json" | jq ". as \$k | {pub_key: \$k, power: $VALIDATOR_POWER, name: \"$v\"}" > pub_validator.json
             cat /tendermint/genesis.json | jq ".validators |= .+ [$(cat pub_validator.json)]" > tmpgenesis && mv tmpgenesis /tendermint/genesis.json
             rm pub_validator.json
           done
@@ -206,6 +206,28 @@ spec:
             seeds+=("$s.$fqdn_suffix:46656")
           done
           seeds=$(IFS=','; echo "${seeds[*]}")
+
+          cat > /tendermint/config.toml << EOL                                                                                                                                                                             
+          # This is a TOML config file.
+          # For more information, see https://github.com/toml-lang/toml
+
+          proxy_app = "tcp://127.0.0.1:46658"
+          moniker = "anonymous"
+          fast_sync = true
+          db_backend = "leveldb"
+          log_level = "state:info,*:error"
+
+          [rpc]
+          laddr = "tcp://0.0.0.0:46657"
+
+          [p2p]
+          laddr = "tcp://0.0.0.0:46656"
+          seeds = ""
+
+          [tx_index]
+          indexer="kv"
+          index_tags="bftx.id"
+          EOL
 
           tendermint node --p2p.seeds="$seeds" --moniker="`hostname`" --proxy_app="tcp://127.0.0.1:46658"
         volumeMounts:
