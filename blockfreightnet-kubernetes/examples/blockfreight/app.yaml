@@ -18,6 +18,22 @@ spec:
     app: bftx
 ---
 apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+  name: blockfreight-api
+  labels:
+    app: blockfreight-api
+spec:
+  type: NodePort
+  ports:
+  - port: 12345
+    targetPort: 12345
+  selector:
+    app: bftx
+---
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: bftx-config
@@ -242,8 +258,8 @@ spec:
       - name: app
         imagePullPolicy: Always
         image: blockfreight/go-bftx:develop
-        # Alternate: Use Testing Branch
-        #  image: blockfreight/go-bftx:bootstrap
+        ports:
+        - containerPort: 12345
         env:
         - name: BFTXHOME
           value: /go/src/github.com/blockfreight/go-bftx
