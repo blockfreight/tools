@@ -263,6 +263,10 @@ spec:
         env:
         - name: BFTXHOME
           value: /go/src/github.com/blockfreight/go-bftx
+        - name: LOCAL_RPC_CLIENT_ADDRESS
+          value: tcp://localhost:46657
+        - name: DOCKER_RPC_CLIENT_ADDRESS
+          value: tcp://blockfreight:46657
         workingDir: /go/src/github.com/blockfreight/go-bftx
         command:
         - bash
