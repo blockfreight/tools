@@ -26,7 +26,8 @@ metadata:
   labels:
     app: blockfreight-api
 spec:
-  type: NodePort
+  type: LoadBalancer
+  sessionAffinity: ClientIP
   ports:
   - port: 12345
     targetPort: 12345
@@ -159,7 +160,7 @@ spec:
             mountPath: /app
      containers:
       - name: tm
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         image: tendermint/tendermint:0.15.0
         ports:
         - containerPort: 46656
@@ -263,7 +264,7 @@ spec:
         env:
         - name: BFTXHOME
           value: /go/src/github.com/blockfreight/go-bftx
-        - name: DOCKER_RPC_CLIENT_ADDRESS
+        - name: LOCAL_RPC_CLIENT_ADDRESS
           value: tcp://blockfreight:46657
         workingDir: /go/src/github.com/blockfreight/go-bftx
         command:
@@ -340,6 +341,21 @@ spec:
         - mountPath: /etc/nginx/conf.d/pub_key.conf
           name: tmconfigdir
           subPath: pub_key_nginx.conf
+
+      - name: saber
+        imagePullPolicy: IfNotPresent
+        image: localhost:5000/bftx-saber
+        ports:
+        - containerPort: 22222
+        command:
+        - bash
+        - "-c"
+        - |
+          set -ex
+          python3 server.py
+        volumeMounts:
+        - name: appdir
+          mountPath: /app
 
      volumes:
       - name: tmconfigdir
