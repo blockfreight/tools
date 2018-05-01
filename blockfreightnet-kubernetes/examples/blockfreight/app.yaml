@@ -10,10 +10,10 @@ metadata:
 spec:
   ports:
   - port: 46656
+    targetPort: 46656  
     name: p2p
   - port: 46657
     name: rpc
-  clusterIP: None
   selector:
     app: bftx
 ---
@@ -35,12 +35,28 @@ spec:
     app: bftx
 ---
 apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+  name: blockfreight-tm
+  labels:
+    app: blockfreight-tm
+spec:
+  type: LoadBalancer  
+  ports:
+  - port: 46656
+    targetPort: 46656
+  selector:
+    app: bftx
+---
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: bftx-config
 data:
-  seeds: "bftx-0,bftx-1,bftx-2,bftx-3"
-  validators: "bftx-0,bftx-1,bftx-2,bftx-3"
+  seeds: "bftx-0"
+  validators: "bftx-0"
   validator.power: "10"
   genesis.json: |-
     {
@@ -62,48 +78,21 @@ kind: ConfigMap
 data:
         genesis.json: |-
           {
-            "chain_id": "chain-idealX",
-            "app_options": {
-              "accounts": [
-                {
-                  "pub_key": "bftx-0",
-                  "coins": [
+              "chain_id":"chain-idealX",
+              "app_options":{
+                  "accounts":[
                     {
-                      "denom": "mycoin",
-                      "amount": 1000000000
-                      }
-                      ]
-                      },
-                      {
-                        "pub_key": "bftx-1",
-                        "coins": [
+                        "pub_key":"bftx-0",
+                        "coins":[
                           {
-                            "denom": "mycoin",
-                            "amount": 1000000000
-                            }
+                              "denom":"mycoin",
+                              "amount":1000000000
+                          }
                         ]
-                        },
-                        {
-                          "pub_key": "bftx-2",
-                          "coins": [
-                            {
-                              "denom": "mycoin",
-                              "amount": 1000000000
-                              }
-                              ]
-                              },
-                              {
-                                "pub_key": "bftx-3",
-                                "coins": [
-                                  {
-                                    "denom": "mycoin",
-                                    "amount": 1000000000
-                                    }
-                                    ]
-                                    }
-                                    ]
-                                  }
-                            }
+                    }
+                  ]
+              }
+            }
 metadata:
     name: app-config    
 ---
@@ -126,7 +115,7 @@ spec:
     matchLabels:
        app: bftx
   serviceName: blockfreight
-  replicas: 4
+  replicas: 1
   template:
     metadata:
       labels:
@@ -190,17 +179,14 @@ spec:
         - "-c"
         - |
           set -ex
-
           # copy template
           cp /etc/tendermint/genesis.json /tendermint/genesis.json
-
           # fill genesis file with validators
           IFS=',' read -ra VALS_ARR <<< "$VALIDATORS"
           fqdn_suffix=$(hostname -f | sed 's#[^.]*\.\(\)#\1#')
           for v in "${VALS_ARR[@]}"; do
             # wait until validator generates priv/pub key pair
             set +e
-
             curl -s --fail "http://$v.$fqdn_suffix/pub_key.json" > /dev/null
             ERR=$?
             while [ "$ERR" != 0 ]; do
@@ -209,13 +195,11 @@ spec:
               ERR=$?
             done
             set -e
-
             # add validator to genesis file along with its pub_key
             curl -s "http://$v.$fqdn_suffix/pub_key.json" | jq ". as \$k | {pub_key: \$k, power: $VALIDATOR_POWER, name: \"$v\"}" > pub_validator.json
             cat /tendermint/genesis.json | jq ".validators |= .+ [$(cat pub_validator.json)]" > tmpgenesis && mv tmpgenesis /tendermint/genesis.json
             rm pub_validator.json
           done
-
           # construct seeds
           IFS=',' read -ra SEEDS_ARR <<< "$SEEDS"
           seeds=()
@@ -223,29 +207,23 @@ spec:
             seeds+=("$s.$fqdn_suffix:46656")
           done
           seeds=$(IFS=','; echo "${seeds[*]}")
-
           cat > /tendermint/config.toml << EOL                                                                                                                                                                             
           # This is a TOML config file.
           # For more information, see https://github.com/toml-lang/toml
-
           proxy_app = "tcp://127.0.0.1:46658"
           moniker = "anonymous"
           fast_sync = true
           db_backend = "leveldb"
           log_level = "state:info,*:error"
-
           [rpc]
           laddr = "tcp://0.0.0.0:46657"
-
           [p2p]
           laddr = "tcp://0.0.0.0:46656"
           seeds = ""
-
           [tx_index]
           indexer="kv"
           index_tags="bftx.id"
           EOL
-
           tendermint node --p2p.seeds="$seeds" --moniker="`hostname`" --proxy_app="tcp://127.0.0.1:46658"
         volumeMounts:
         - name: tmdir
@@ -281,10 +259,8 @@ spec:
           while [[ $i -lt $length ]]; do
             # extract pod name ("tm-0")
             pod=$(cat genesis.json | jq -r ".app_options.accounts[$i].pub_key")
-
             # wait until pod starts to serve its pub_key
             set +e
-
             curl -s --fail "http://$pod.$fqdn_suffix/app_pub_key.json" > /dev/null
             ERR=$?
             while [ "$ERR" != 0 ]; do
@@ -293,19 +269,14 @@ spec:
               ERR=$?
             done
             set -e
-
             # get its pub_key
             curl -s "http://$pod.$fqdn_suffix/app_pub_key.json" | jq "." > k.json
-
             # replace pod name with it ("tm-0" => "{"type": ..., "data": ...}")
             cat genesis.json | jq ".app_options.accounts[$i].pub_key = $(cat k.json | jq '.')" > tmpgenesis && mv tmpgenesis genesis.json
             rm -f k.json
-
             i=$((i+1))
           done
-
           rm -f /socks/app.sock # remove old socket
-
           bftnode start 
         volumeMounts:
         - name: appdir
@@ -341,21 +312,6 @@ spec:
         - mountPath: /etc/nginx/conf.d/pub_key.conf
           name: tmconfigdir
           subPath: pub_key_nginx.conf
-
-      - name: saber
-        imagePullPolicy: IfNotPresent
-        image: localhost:5000/bftx-saber
-        ports:
-        - containerPort: 22222
-        command:
-        - bash
-        - "-c"
-        - |
-          set -ex
-          python3 server.py
-        volumeMounts:
-        - name: appdir
-          mountPath: /app
 
      volumes:
       - name: tmconfigdir
