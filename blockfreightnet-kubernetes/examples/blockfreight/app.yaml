@@ -8,8 +8,9 @@ metadata:
   labels:
     app: blockfreight
 spec:
+  type: LoadBalancer
   ports:
-  - port: 46656
+  - port: 31032
     targetPort: 46656  
     name: p2p
   - port: 46657
@@ -31,22 +32,6 @@ spec:
   ports:
   - port: 12345
     targetPort: 12345
-  selector:
-    app: bftx
----
-apiVersion: v1
-kind: Service
-metadata:
-  annotations:
-    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
-  name: blockfreight-tm
-  labels:
-    app: blockfreight-tm
-spec:
-  type: LoadBalancer  
-  ports:
-  - port: 46656
-    targetPort: 46656
   selector:
     app: bftx
 ---
