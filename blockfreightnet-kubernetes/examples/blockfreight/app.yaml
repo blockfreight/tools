@@ -70,6 +70,8 @@ spec:
     name: p2p
   - port: 46657
     name: rpc
+  - port: 80
+    name: http
   selector:
     app: bftx
 
