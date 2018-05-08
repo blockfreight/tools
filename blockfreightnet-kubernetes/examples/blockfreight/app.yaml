@@ -70,7 +70,8 @@ spec:
     name: p2p
   - port: 46657
     name: rpc
-  - port: 80
+  - port: 31033
+    targetPort: 80  
     name: http
   selector:
     app: bftx
@@ -343,6 +344,8 @@ spec:
         image: nginx
         ports:
         - containerPort: 80
+          name: http
+        - containerPort: 8080
         command:
         - bash
         - "-c"
@@ -354,6 +357,14 @@ spec:
           cp -r /tendermint/pub_key.json /usr/share/nginx/pub_key.json
           ls /app/
           cp /app/pub_key.json /usr/share/nginx/app_pub_key.json
+
+          mkdir -p /etc/nginx/html
+          cd /etc/nginx/html
+          touch index.html
+          cat > index.html << EOL   
+            <!DOCTYPE html PUBLIC"ISO/IEC 15445:2000//DTD HTML//EN"><html><head><title></title></head><body><p>Blockfreight.</body></html>
+          EOL
+
           nginx -g "daemon off;"
         volumeMounts:
         - name: tmdir
