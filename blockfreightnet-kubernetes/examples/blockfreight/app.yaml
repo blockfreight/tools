@@ -65,8 +65,7 @@ spec:
   # // Define Endpoint (Load-balancer) & Port Assignment
   type: LoadBalancer
   ports:
-  - port: 31032
-    targetPort: 46656  
+  - port: 46656
     name: p2p
   - port: 46657
     name: rpc
