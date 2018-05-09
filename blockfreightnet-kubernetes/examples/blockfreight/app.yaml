@@ -66,8 +66,10 @@ spec:
   type: LoadBalancer
   ports:
   - port: 888
+    targetPort: 46656
     name: p2p
   - port: 24365
+    targetPort: 46657
     name: rpc
   - port: 80
     name: http
@@ -92,6 +94,7 @@ spec:
   sessionAffinity: ClientIP
   ports:
   - port: 8080
+    targetPort: 12345  
   selector:
     app: bftx
 
