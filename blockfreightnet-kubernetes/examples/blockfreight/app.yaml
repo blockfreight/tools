@@ -65,9 +65,9 @@ spec:
   # // Define Endpoint (Load-balancer) & Port Assignment
   type: LoadBalancer
   ports:
-  - port: 46656
+  - port: 888
     name: p2p
-  - port: 46657
+  - port: 24365
     name: rpc
   - port: 80
     name: http
@@ -91,8 +91,7 @@ spec:
   type: LoadBalancer
   sessionAffinity: ClientIP
   ports:
-  - port: 12345
-    targetPort: 12345
+  - port: 8080
   selector:
     app: bftx
 
@@ -124,23 +123,23 @@ data:
 apiVersion: v1
 kind: ConfigMap
 data:
-        genesis.json: |-
-          {
-              "chain_id":"chain-idealX",
-              "app_options":{
-                  "accounts":[
+  genesis.json: |-
+    {
+        "chain_id":"chain-idealX",
+        "app_options":{
+            "accounts":[
+              {
+                  "pub_key":"bftx-0",
+                  "coins":[
                     {
-                        "pub_key":"bftx-0",
-                        "coins":[
-                          {
-                              "denom":"mycoin",
-                              "amount":1000000000
-                          }
-                        ]
+                        "denom":"mycoin",
+                        "amount":1000000000
                     }
                   ]
               }
-            }
+            ]
+        }
+      }
 metadata:
     name: app-config    
 
