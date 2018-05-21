@@ -276,7 +276,7 @@ spec:
           indexer="kv"
           index_tags="bftx.id"
           EOL
-          tendermint node --p2p.seeds="$seeds" --moniker="`hostname`" --proxy_app="tcp://127.0.0.1:46658"
+          tendermint node --p2p.seeds="$seeds" --moniker="`hostname`" --proxy_app="tcp://127.0.0.1:46658" --consensus.create_empty_blocks=false
         volumeMounts:
         - name: tmdir
           mountPath: /tendermint
