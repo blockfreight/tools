@@ -132,13 +132,7 @@ data:
         "app_options":{
             "accounts":[
               {
-                  "pub_key":"bftx-0",
-                  "coins":[
-                    {
-                        "denom":"mycoin",
-                        "amount":1000000000
-                    }
-                  ]
+                  "pub_key":"bftx-0"
               }
             ]
         }
