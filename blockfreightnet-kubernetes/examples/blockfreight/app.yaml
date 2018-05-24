@@ -185,7 +185,7 @@ spec:
         command: ["bash", "-c", "
             set -ex\n
             if [ ! -f /app/key.json ]; then\n
-              basecoin key new > /app/key.json\n
+              bftnode new_key > /app/key.json\n
               # pub_key.json will be served by app-pub-key container\n
             fi\n
             cat /app/key.json | jq \".pub_key\" > /app/pub_key.json\n
@@ -228,24 +228,8 @@ spec:
           # copy template
           cp /etc/tendermint/genesis.json /tendermint/genesis.json
           # fill genesis file with validators
-          IFS=',' read -ra VALS_ARR <<< "$VALIDATORS"
           fqdn_suffix=blockfreight.net
-          for v in "${VALS_ARR[@]}"; do
-            # wait until validator generates priv/pub key pair
-            set +e
-            curl -s --fail "http://$v.$fqdn_suffix/pub_key.json" > /dev/null
-            ERR=$?
-            while [ "$ERR" != 0 ]; do
-              sleep 5
-              curl -s --fail "http://$v.$fqdn_suffix/pub_key.json" > /dev/null
-              ERR=$?
-            done
-            set -e
-            # add validator to genesis file along with its pub_key
-            curl -s "http://$v.$fqdn_suffix/pub_key.json" | jq ". as \$k | {pub_key: \$k, power: $VALIDATOR_POWER, name: \"$v\"}" > pub_validator.json
-            cat /tendermint/genesis.json | jq ".validators |= .+ [$(cat pub_validator.json)]" > tmpgenesis && mv tmpgenesis /tendermint/genesis.json
-            rm pub_validator.json
-          done
+          curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json >  /tendermint/genesis.json
           # construct seeds
           IFS=',' read -ra SEEDS_ARR <<< "$SEEDS"
           seeds=()
@@ -299,29 +283,7 @@ spec:
           # replace "tm-N" with public keys in genesis file
           cp /etc/app/genesis.json genesis.json
           fqdn_suffix=blockfreight.net
-          # for every "base/account"
-          i=0
-          length=$(cat genesis.json | jq ".app_options.accounts | length")
-          while [[ $i -lt $length ]]; do
-            # extract pod name ("tm-0")
-            pod=$(cat genesis.json | jq -r ".app_options.accounts[$i].pub_key")
-            # wait until pod starts to serve its pub_key
-            set +e
-            curl -s --fail "http://$pod.$fqdn_suffix/app_pub_key.json" > /dev/null
-            ERR=$?
-            while [ "$ERR" != 0 ]; do
-              sleep 5
-              curl -s --fail "http://$pod.$fqdn_suffix/app_pub_key.json" > /dev/null
-              ERR=$?
-            done
-            set -e
-            # get its pub_key
-            curl -s "http://$pod.$fqdn_suffix/app_pub_key.json" | jq "." > k.json
-            # replace pod name with it ("tm-0" => "{"type": ..., "data": ...}")
-            cat genesis.json | jq ".app_options.accounts[$i].pub_key = $(cat k.json | jq '.')" > tmpgenesis && mv tmpgenesis genesis.json
-            rm -f k.json
-            i=$((i+1))
-          done
+          curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > genesis.json
           rm -f /socks/app.sock # remove old socket
           bftnode start 
         volumeMounts:
