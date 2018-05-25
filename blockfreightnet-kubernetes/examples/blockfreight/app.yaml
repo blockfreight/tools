@@ -66,10 +66,8 @@ spec:
   type: LoadBalancer
   ports:
   - port: 888
-    targetPort: 46656
     name: p2p
   - port: 24365
-    targetPort: 46657
     name: rpc
   - port: 80
     name: http
@@ -198,9 +196,9 @@ spec:
         imagePullPolicy: IfNotPresent
         image: tendermint/tendermint:0.15.0
         ports:
-        - containerPort: 46656
+        - containerPort: 888
           name: p2p
-        - containerPort: 46657
+        - containerPort: 24365
           name: rpc
         env:
         - name: SEEDS
@@ -229,7 +227,7 @@ spec:
           cp /etc/tendermint/genesis.json /tendermint/genesis.json
           # fill genesis file with validators
           fqdn_suffix=blockfreight.net
-          curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json >  /tendermint/genesis.json
+          curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > /tendermint/genesis.json
           # construct seeds
           IFS=',' read -ra SEEDS_ARR <<< "$SEEDS"
           seeds=()
@@ -237,6 +235,8 @@ spec:
             seeds+=("$s.$fqdn_suffix:888")
           done
           seeds=$(IFS=','; echo "${seeds[*]}")
+
+          # Creating config.toml
           cat > /tendermint/config.toml << EOL                                                                                                                                                                             
           # This is a TOML config file.
           # For more information, see https://github.com/toml-lang/toml
@@ -246,7 +246,7 @@ spec:
           db_backend = "leveldb"
           log_level = "state:info,*:error"
           [rpc]
-          laddr = "tcp://0.0.0.0:46657"
+          laddr = "tcp://0.0.0.0:24365"
           [p2p]
           laddr = "tcp://0.0.0.0:888"
           seeds = ""
@@ -254,6 +254,8 @@ spec:
           indexer="kv"
           index_tags="bftx.id"
           EOL
+
+          # Starting Tendermint
           tendermint node --p2p.seeds="$seeds" --moniker="`hostname`" --proxy_app="tcp://127.0.0.1:46658" --consensus.create_empty_blocks=false
         volumeMounts:
         - name: tmdir
@@ -280,7 +282,7 @@ spec:
         - "-c"
         - |
           set -ex
-          # replace "tm-N" with public keys in genesis file
+          # replace "bftx-N" with public keys in genesis file
           cp /etc/app/genesis.json genesis.json
           fqdn_suffix=blockfreight.net
           curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > genesis.json
