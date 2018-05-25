@@ -66,8 +66,10 @@ spec:
   type: LoadBalancer
   ports:
   - port: 888
+    targetPort: 46656
     name: p2p
   - port: 24365
+    targetPort: 46657
     name: rpc
   - port: 80
     name: http
@@ -196,9 +198,9 @@ spec:
         imagePullPolicy: IfNotPresent
         image: tendermint/tendermint:0.15.0
         ports:
-        - containerPort: 888
+        - containerPort: 46656
           name: p2p
-        - containerPort: 24365
+        - containerPort: 46657
           name: rpc
         env:
         - name: SEEDS
@@ -246,9 +248,9 @@ spec:
           db_backend = "leveldb"
           log_level = "state:info,*:error"
           [rpc]
-          laddr = "tcp://0.0.0.0:24365"
+          laddr = "tcp://0.0.0.0:46657"
           [p2p]
-          laddr = "tcp://0.0.0.0:888"
+          laddr = "tcp://0.0.0.0:46656"
           seeds = ""
           [tx_index]
           indexer="kv"
