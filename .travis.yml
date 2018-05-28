@@ -1,2 +1,4 @@
+before_install:
+  - chmod +x ./deploy.sh
 script:
   - './deploy.sh;'
