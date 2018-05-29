@@ -229,36 +229,13 @@ spec:
           fqdn_suffix=blockfreight.net
           
           curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > /tendermint/genesis.json
-          
-          # construct seeds
-          IFS=',' read -ra SEEDS_ARR <<< "$SEEDS"
-          seeds=()
-          for s in "${SEEDS_ARR[@]}"; do
-            seeds+=("$s.$fqdn_suffix:888")
-          done
-          seeds=$(IFS=','; echo "${seeds[*]}")
 
           # Creating config.toml
-          cat > /tendermint/config.toml << EOL                                                                                                                                                                             
-          # This is a TOML config file.
-          # For more information, see https://github.com/toml-lang/toml
-          proxy_app = "tcp://127.0.0.1:46658"
-          moniker = "anonymous"
-          fast_sync = true
-          db_backend = "leveldb"
-          log_level = "state:info,*:error"
-          [rpc]
-          laddr = "tcp://0.0.0.0:46657"
-          [p2p]
-          laddr = "tcp://0.0.0.0:46656"
-          seeds = ""
-          [tx_index]
-          indexer="kv"
-          index_tags="bftx.id"
-          EOL
+          curl -L https://raw.githubusercontent.com/blockfreight/tools/master/config.toml > /tendermint/config.toml
+          cp /tendermint/config.toml /tendermint/config/config.toml
 
           # Starting Tendermint
-          tendermint node --p2p.seeds="$seeds" --moniker="`hostname`" --proxy_app="tcp://127.0.0.1:46658" --consensus.create_empty_blocks=false
+          tendermint node --moniker="`hostname`" --proxy_app="tcp://127.0.0.1:46658" --consensus.create_empty_blocks=false
         volumeMounts:
         - name: tmdir
           mountPath: /tendermint
