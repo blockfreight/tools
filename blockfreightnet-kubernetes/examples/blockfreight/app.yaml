@@ -228,9 +228,10 @@ spec:
           # copy template
           cp /etc/tendermint/genesis.json /tendermint/genesis.json
           # fill genesis file with validators
-          fqdn_suffix=blockfreight.net
           IFS=',' read -ra VALS_ARR <<< "$VALIDATORS"
-           for v in "${VALS_ARR[@]}"; do
+          fqdn_suffix=blockfreight.net
+          for v in "${VALS_ARR[@]}"; do
+            # wait until validator generates priv/pub key pair
             set +e
             curl -s --fail "http://$v.$fqdn_suffix/pub_key.json" > /dev/null
             ERR=$?
@@ -240,8 +241,8 @@ spec:
               ERR=$?
             done
             set -e
-            # add validator to genesis file along with its pub_key
             curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > /tendermint/genesis.json
+          done
           # construct seeds
           IFS=',' read -ra SEEDS_ARR <<< "$SEEDS"
           seeds=()
