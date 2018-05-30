@@ -6,7 +6,7 @@
                 "type": "ed25519",
                 "data": "50E962E540E6AAB6996613560C87B74FBAB3EB6CC102E5BAC615B7B7ED5682CF"
             },
-            "amount": 10,
+            "power": 10,
             "name": "bftx0"
         },
         {
@@ -14,7 +14,7 @@
                 "type": "ed25519",
                 "data": "3D9DA3A242C5B95767FA24BFB76E907930087B87907C5480FB85F22315D3E859"
             },
-            "amount": 10,
+            "power": 10,
             "name": "bftx1"
         },
         {
@@ -22,7 +22,7 @@
                 "type": "ed25519",
                 "data": "0EDE6DFCC429D03E539A975A604FEB20994D50A9259E2A0F20A9533556074BBC"
             },
-            "amount": 10,
+            "power": 10,
             "name": "bftx2"
         },
         {
@@ -30,7 +30,7 @@
                 "type": "ed25519",
                 "data": "04E7495A468B07DCC5E19974E5200720C5FB94AD9D2AD32DE2B8CBE130347926"
             },
-            "amount": 10,
+            "power": 10,
             "name": "bftx3"
         }
     ],
