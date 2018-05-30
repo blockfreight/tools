@@ -180,19 +180,6 @@ spec:
         volumeMounts: 
         - name: tmdir
           mountPath: /tendermint
-      - name: app-gen-key
-        image: blockfreight/go-bftx:bootstrap       
-        command: ["bash", "-c", "
-            set -ex\n
-            if [ ! -f /app/key.json ]; then\n
-              bftnode new_key > /app/key.json\n
-              # pub_key.json will be served by app-pub-key container\n
-            fi\n
-            cat /app/key.json | jq \".pub_key\" > /app/pub_key.json\n
-          "]
-        volumeMounts: 
-          - name: appdir
-            mountPath: /app
      containers:
       - name: tm
         imagePullPolicy: IfNotPresent
@@ -225,15 +212,13 @@ spec:
         - "-c"
         - |
           set -ex
-          # copy template
-          fqdn_suffix=blockfreight.net
-          
-          curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > /tendermint/genesis.json
 
+          # Creating genesis.json
+          curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > /tendermint/genesis.json
+          
           # Creating config.toml
           curl -L https://raw.githubusercontent.com/blockfreight/tools/master/config.toml > /tendermint/config.toml
-          cp /tendermint/config.toml /tendermint/config/config.toml
-
+          
           # Starting Tendermint
           tendermint node --moniker="`hostname`" --proxy_app="tcp://127.0.0.1:46658" --consensus.create_empty_blocks=false
         volumeMounts:
