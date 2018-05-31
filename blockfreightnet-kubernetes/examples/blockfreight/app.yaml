@@ -241,6 +241,12 @@ spec:
         - "-c"
         - |
           set -ex
+          # fixes 403 Permission Denied (open() "/tendermint/pub_key.json" failed (13: Permission denied))
+          # => we cannot serve from /tendermint, so we copy the file
+          mkdir -p /usr/share/nginx
+          cp -r /tendermint/pub_key.json /usr/share/nginx/pub_key.json
+          ls /app/
+          cp /app/pub_key.json /usr/share/nginx/app_pub_key.json
 
           mkdir -p /etc/nginx/html
           cd /etc/nginx/html
@@ -250,6 +256,14 @@ spec:
           EOL
 
           nginx -g "daemon off;"
+        volumeMounts:
+        - name: tmdir
+          mountPath: /tendermint
+        - name: appdir
+          mountPath: /app
+        - mountPath: /etc/nginx/conf.d/pub_key.conf
+          name: tmconfigdir
+          subPath: pub_key_nginx.conf
 
      volumes:
       - name: tmconfigdir
@@ -309,3 +323,4 @@ spec:
 # // ==================================================
 # // Blockfreight™ | The blockchain for global freight.
 # // ==================================================
+
