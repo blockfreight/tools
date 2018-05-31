@@ -167,19 +167,6 @@ spec:
       labels:
         app: bftx
     spec:
-     initContainers:
-      - name: tm-gen-validator
-        image: tendermint/tendermint:0.10.0
-        command: ["bash", "-c", "
-            set -ex\n
-            if [ ! -f /tendermint/priv_validator.json ]; then\n
-              tendermint gen_validator > /tendermint/priv_validator.json\n                    
-            fi\n
-            cat /tendermint/priv_validator.json | jq \".pub_key\" > /tendermint/pub_key.json\n 
-          "]
-        volumeMounts: 
-        - name: tmdir
-          mountPath: /tendermint
      containers:
       - name: tm
         imagePullPolicy: IfNotPresent
@@ -214,21 +201,13 @@ spec:
           set -ex
 
           # Creating genesis.json
-          curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > /tendermint/genesis.json
-          
+          curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > $TMHOME/genesis.json
+
           # Creating config.toml
-          curl -L https://raw.githubusercontent.com/blockfreight/tools/master/config.toml > /tendermint/config.toml
-          
+          curl -L https://raw.githubusercontent.com/blockfreight/tools/master/config.toml > $TMHOME/config.toml
+
           # Starting Tendermint
           tendermint node --moniker="`hostname`" --proxy_app="tcp://127.0.0.1:46658" --consensus.create_empty_blocks=false
-        volumeMounts:
-        - name: tmdir
-          mountPath: /tendermint
-        - mountPath: /etc/tendermint/genesis.json
-          name: tmconfigdir
-          subPath: genesis.json
-        - name: socksdir
-          mountPath: /socks
 
       - name: app
         imagePullPolicy: Always
@@ -246,20 +225,9 @@ spec:
         - "-c"
         - |
           set -ex
-          # replace "bftx-N" with public keys in genesis file
-          cp /etc/app/genesis.json genesis.json
-          fqdn_suffix=blockfreight.net
           curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > genesis.json
           rm -f /socks/app.sock # remove old socket
-          bftnode start 
-        volumeMounts:
-        - name: appdir
-          mountPath: /app
-        - mountPath: /etc/app/genesis.json
-          name: appconfigdir
-          subPath: genesis.json
-        - name: socksdir
-          mountPath: /socks
+          bftnode start
 
       - name: pub-key
         imagePullPolicy: IfNotPresent
@@ -273,12 +241,6 @@ spec:
         - "-c"
         - |
           set -ex
-          # fixes 403 Permission Denied (open() "/tendermint/pub_key.json" failed (13: Permission denied))
-          # => we cannot serve from /tendermint, so we copy the file
-          mkdir -p /usr/share/nginx
-          cp -r /tendermint/pub_key.json /usr/share/nginx/pub_key.json
-          ls /app/
-          cp /app/pub_key.json /usr/share/nginx/app_pub_key.json
 
           mkdir -p /etc/nginx/html
           cd /etc/nginx/html
@@ -288,14 +250,6 @@ spec:
           EOL
 
           nginx -g "daemon off;"
-        volumeMounts:
-        - name: tmdir
-          mountPath: /tendermint
-        - name: appdir
-          mountPath: /app
-        - mountPath: /etc/nginx/conf.d/pub_key.conf
-          name: tmconfigdir
-          subPath: pub_key_nginx.conf
 
      volumes:
       - name: tmconfigdir
