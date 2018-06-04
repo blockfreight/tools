@@ -170,7 +170,7 @@ spec:
      containers:
       - name: tm
         imagePullPolicy: IfNotPresent
-        image: tendermint/tendermint:0.15.0
+        image: tendermint/tendermint:0.19.7
         ports:
         - containerPort: 46656
           name: p2p
@@ -195,23 +195,28 @@ spec:
         - name: TMHOME
           value: /tendermint
         command:
-        - bash
+        - /bin/sh
         - "-c"
         - |
           set -ex
+          mkdir /tendermint/config
 
           # Creating genesis.json
           curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > $TMHOME/genesis.json
+          cp $TMHOME/genesis.json /tendermint/config/genesis.json
+
+          cat /tendermint/config/genesis.json
 
           # Creating config.toml
           curl -L https://raw.githubusercontent.com/blockfreight/tools/master/config.toml > $TMHOME/config.toml
+          cp $TMHOME/config.toml /tendermint/config/config.toml
 
           # Starting Tendermint
-          tendermint node --moniker="`hostname`" --proxy_app="tcp://127.0.0.1:46658" --consensus.create_empty_blocks=false
+          tendermint node --moniker="`hostname`" --proxy_app="tcp://127.0.0.1:46658" --consensus.create_empty_blocks=false --log_level=debug
 
       - name: app
         imagePullPolicy: Always
-        image: blockfreight/go-bftx:develop
+        image: blockfreight/go-bftx:alpha
         ports:
         - containerPort: 12345
         env:
