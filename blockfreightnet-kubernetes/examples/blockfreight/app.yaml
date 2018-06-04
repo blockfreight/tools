@@ -202,8 +202,8 @@ spec:
           mkdir /tendermint/config
 
           # Creating genesis.json
-          curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > $TMHOME/genesis.json
-          cp $TMHOME/genesis.json /tendermint/config/genesis.json
+          curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > $TMHOME/config/genesis.json
+          cp $TMHOME/config/genesis.json $TMHOME/genesis.json 
 
           cat /tendermint/config/genesis.json
 
