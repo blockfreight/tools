@@ -7,7 +7,7 @@ log_level = "state:info,*:error"
 laddr = "tcp://0.0.0.0:46657"
 [p2p]
 laddr = "tcp://0.0.0.0:46656"
-seeds = "bftx0.blockfreight.net:888,bftx1.blockfreight.net:888,bftx2.blockfreight.net:888,bftx3.blockfreight.net:888"
+seeds = ""
 [tx_index]
 indexer="kv"
 index_tags="bftx.id"
