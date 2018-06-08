@@ -222,6 +222,7 @@ spec:
         image: blockfreight/go-bftx:rc1
         ports:
         - containerPort: 12345
+        - containerPort: 46658
         env:
         - name: BFTXHOME
           value: /go/src/github.com/blockfreight/go-bftx
