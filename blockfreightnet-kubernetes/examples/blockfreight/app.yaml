@@ -170,7 +170,7 @@ spec:
      containers:
       - name: tm
         imagePullPolicy: IfNotPresent
-        image: tendermint/tendermint:0.19.7
+        image: tendermint/tendermint:0.20.0
         ports:
         - containerPort: 46656
           name: p2p
@@ -219,21 +219,21 @@ spec:
 
       - name: app
         imagePullPolicy: Always
-        image: blockfreight/go-bftx:alpha
+        image: blockfreight/go-bftx:rc1
         ports:
         - containerPort: 12345
         env:
         - name: BFTXHOME
           value: /go/src/github.com/blockfreight/go-bftx
         - name: LOCAL_RPC_CLIENT_ADDRESS
-          value: localhost:46657
+          value: tcp://localhost:46657
         workingDir: /go/src/github.com/blockfreight/go-bftx
         command:
         - bash
         - "-c"
         - |
           set -ex
-          curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > genesis.json
+         
           rm -f /socks/app.sock # remove old socket
           bftnode start
 
