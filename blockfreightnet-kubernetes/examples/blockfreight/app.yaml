@@ -206,8 +206,6 @@ spec:
           # Creating genesis.json
           curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > $TMHOME/config/genesis.json
 
-          cat /tendermint/config/genesis.json
-
           # Creating config.toml
           curl -L https://raw.githubusercontent.com/blockfreight/tools/master/config.toml > $TMHOME/config.toml
           cp $TMHOME/config.toml /tendermint/config/config.toml
@@ -215,7 +213,7 @@ spec:
           NODE_ID=$(tendermint show_node_id)
 
           # Starting Tendermint
-          tendermint node --moniker="`hostname`" seeds="$NODE_ID@bftx0.blockfreight.net:888,$NODE_ID@bftx1.blockfreight.net:888,$NODE_ID@bftx2.blockfreight.net:888,$NODE_ID@bftx3.blockfreight.net:888" --proxy_app="tcp://127.0.0.1:46658" --consensus.create_empty_blocks=false
+          tendermint node --moniker="`hostname`" seeds="$NODE_ID@bftx0.blockfreight.net:888,$NODE_ID@bftx1.blockfreight.net:888,$NODE_ID@bftx2.blockfreight.net:888,$NODE_ID@bftx3.blockfreight.net:888" --proxy_app="tcp://localhost:46658" --consensus.create_empty_blocks=false
 
       - name: app
         imagePullPolicy: Always
