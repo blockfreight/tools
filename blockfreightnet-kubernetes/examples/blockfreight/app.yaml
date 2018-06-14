@@ -192,7 +192,7 @@ spec:
           cp $TMHOME/config.toml /tendermint/config/config.toml
           NODE_ID=$(tendermint show_node_id)
           # Starting Tendermint
-          tendermint node --moniker="`hostname`" seeds="54e16fbb13ce0ccd448c213b1494eedf081d75a9@bftx0.blockfreight.net" --proxy_app="tcp://localhost:46658" --consensus.create_empty_blocks=false
+          tendermint node --moniker="`hostname`" seeds="54e16fbb13ce0ccd448c213b1494eedf081d75a9@bftx0.blockfreight.net,d39a2fab0a895aaf12146f37d4bb3a9f660dd6ce@bftx1.blockfreight.net" --proxy_app="tcp://localhost:46658" --consensus.create_empty_blocks=false
       - name: app
         imagePullPolicy: Always
         image: blockfreight/go-bftx:rc1
