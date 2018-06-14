@@ -64,7 +64,7 @@ unsafe = false
 [p2p]
 
 # Address to listen for incoming connections
-laddr = "tcp://0.0.0.0:46656"
+laddr = "tcp://0.0.0.0:8888"
 
 # Comma separated list of seed nodes to connect to
 seeds = ""
