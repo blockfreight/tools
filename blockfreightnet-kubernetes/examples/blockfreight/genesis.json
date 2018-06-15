@@ -5,31 +5,10 @@
       {
         "pub_key": {
           "type": "AC26791624DE60",
-          "value": "UOli5UDmqraZZhNWDIe3T7qz62zBAuW6xhW3t+1Wgs8="
+          "value": "uoAB81kLb4kUEj0szdSLlnZShAAqer8z4Un3s3aI6w8="
         },
         "power": 10,
         "name": "bftx0"
-      }, {
-        "pub_key": {
-          "type": "AC26791624DE60",
-          "value": "PZ2jokLFuVdn+iS/t26QeTAIe4eQfFSA+4XyIxXT6Fk="
-        },
-        "power": 10,
-        "name": "bftx1"
-      }, {
-        "pub_key": {
-          "type": "AC26791624DE60",
-          "value": "Dt5t/MQp0D5TmpdaYE/rIJlNUKklnioPIKlTNVYHS7w="
-        },
-        "power": 10,
-        "name": "bftx2"
-      }, {
-        "pub_key": {
-          "type": "AC26791624DE60",
-          "value": "BOdJWkaLB9zF4Zl05SAHIMX7lK2dKtMt4rjL4TA0eSY="
-        },
-        "power": 10,
-        "name": "bftx3"
       }
     ],
     "app_hash": ""
