@@ -16,6 +16,13 @@
         },
         "power": 10,
         "name": "bftx1"
+      }, {
+        "pub_key": {
+          "type": "AC26791624DE60",
+          "value": "1tIYSQcrD4mqro3t1/TTU2eZRCkA5wU8Loqtx05cjRs="
+        },
+        "power": 10,
+        "name": "bftx2"
       }
     ],
     "app_hash": ""
