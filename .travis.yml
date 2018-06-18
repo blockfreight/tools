@@ -1,7 +1,7 @@
+language: bash
 addons:
   ssh_known_hosts: 104.210.54.97
 before_deploy:
-  - >
   - gem install rake
   - openssl aes-256-cbc -K $encrypted_<...>_key -iv $encrypted_<...>_iv -in deploy_rsa.enc -out /tmp/deploy_rsa -d
   - eval "$(ssh-agent -s)"
@@ -10,9 +10,6 @@ before_deploy:
 deploy:
   provider: script
   skip_cleanup: true
-  script:
-    - >
-      rm app.yaml && curl https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/app.yaml > app.yaml
-      kubectl apply -f app.yaml && kubectl delete pods --all --grace-period=0 --force
+  script: bash ./update-node.sh
   on:
     branch: master
