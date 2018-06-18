@@ -1,3 +1,5 @@
+install:
+  - gem install rake
 addons:
   ssh_known_hosts: 104.210.54.97
 before_deploy:
