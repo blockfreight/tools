@@ -9,6 +9,6 @@ before_deploy:
 deploy:
   provider: script
   skip_cleanup: true
-  script: bash ./update-node.sh
+  script: pwd
   on:
     branch: master
