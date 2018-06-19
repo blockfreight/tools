@@ -2,6 +2,6 @@ language: bash
 deploy:
   provider: script
   skip_cleanup: true
-  script: bash update-node.sh $BLOCKFREIGHT_SSH_USER $BFTX0_MASTER_IP $BFTX1_MASTER_IP $BFTX2_MASTER_IP $BFTX3_MASTER_IP
+  script: bash update-node.sh
   on:
     branch: master
