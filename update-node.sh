@@ -1,5 +1,11 @@
 #!/bin/bash
 
+echo '$1'
+echo '$2'
+echo '$3'
+echo '$4'
+echo '$5'
+
 ssh -oStrictHostKeyChecking=no $1@$2  <<-'ENDSSH'
     curl https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/app.yaml > app.yaml
     kubectl apply -f app.yaml && kubectl delete pods --all --grace-period=0 --force
