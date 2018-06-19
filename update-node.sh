@@ -1,7 +1,7 @@
 #!/bin/bash
 
-echo '$1'
-echo '$2'
+echo $BLOCKFREIGHT_SSH_USER
+echo '$BLOCKFREIGHT_SSH_USER'
 echo '$3'
 echo '$4'
 echo '$5'
