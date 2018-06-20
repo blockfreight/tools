@@ -178,6 +178,8 @@ spec:
               key: validators
         - name: TMHOME
           value: /tendermint
+        - name: VALIDATOR_NAME
+          value: <VALIDATOR_NAME>
         command:
         - /bin/sh
         - "-c"

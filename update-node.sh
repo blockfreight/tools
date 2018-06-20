@@ -1,25 +1,12 @@
 #!/bin/bash
 
-ssh -oStrictHostKeyChecking=no $BLOCKFREIGHT_SSH_USER@$BFTX0_MASTER_IP  <<-'ENDSSH'
+for i in 0 1 2 3
+do
+    ssh -oStrictHostKeyChecking=no $BLOCKFREIGHT_SSH_USER@$BFTX$i_MASTER_IP  <<-'ENDSSH'
     curl https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/app.yaml > app.yaml
+    sed -i 's/<VALIDATOR_NAME>/bftx$i' app2.yaml
+    cat app2.yaml
     kubectl apply -f app.yaml && kubectl delete pods --all --grace-period=0 --force
     rm app.yaml
 ENDSSH
-
-ssh -oStrictHostKeyChecking=no $BLOCKFREIGHT_SSH_USER@$BFTX1_MASTER_IP  <<-'ENDSSH'
-    curl https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/app.yaml > app.yaml
-    kubectl apply -f app.yaml && kubectl delete pods --all --grace-period=0 --force
-    rm app.yaml
-ENDSSH
-
-ssh -oStrictHostKeyChecking=no $BLOCKFREIGHT_SSH_USER@$BFTX2_MASTER_IP  <<-'ENDSSH'
-    curl https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/app.yaml > app.yaml
-    kubectl apply -f app.yaml && kubectl delete pods --all --grace-period=0 --force
-    rm app.yaml
-ENDSSH
-
-ssh -oStrictHostKeyChecking=no $BLOCKFREIGHT_SSH_USER@$BFTX3_MASTER_IP  <<-'ENDSSH'
-    curl https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/app.yaml > app.yaml
-    kubectl apply -f app.yaml && kubectl delete pods --all --grace-period=0 --force
-    rm app.yaml
-ENDSSH
+done
