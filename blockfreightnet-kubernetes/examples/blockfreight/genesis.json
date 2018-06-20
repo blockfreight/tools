@@ -5,28 +5,28 @@
       {
         "pub_key": {
           "type": "AC26791624DE60",
-          "value": "uoAB81kLb4kUEj0szdSLlnZShAAqer8z4Un3s3aI6w8="
+          "value": "RBA5gpu4DOLSvjXdmfNelXQHiekSQZscwEFw7jk1NOc="
         },
         "power": 10,
         "name": "bftx0"
       }, {
         "pub_key": {
           "type": "AC26791624DE60",
-          "value": "m42WbGBmr/gvfMoSoTIJzvSTWAVXZCBoPkxOb3MfHwQ="
+          "value": "OzuaFgJCh/YNUCxg/ltnYNq/J62B62U/8g2e7cR1mDc="
         },
         "power": 10,
         "name": "bftx1"
       }, {
         "pub_key": {
           "type": "AC26791624DE60",
-          "value": "1tIYSQcrD4mqro3t1/TTU2eZRCkA5wU8Loqtx05cjRs="
+          "value": "tvWKHHiBenRWpV7VR706k0po3qhvHQJXGmxghjyAR9M="
         },
         "power": 10,
         "name": "bftx2"
       }, {
         "pub_key": {
           "type": "AC26791624DE60",
-          "value": "86NUZ1IYW0jLZ64TYY7xCwmUFpdkyXmFJs+xK49XNQ0="
+          "value": "HcnxaBdanvo5na4QLSvxBVL1X16blnG8DTL4KLk8dv4="
         },
         "power": 10,
         "name": "bftx3"
