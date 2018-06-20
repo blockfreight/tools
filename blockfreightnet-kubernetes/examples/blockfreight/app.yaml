@@ -186,7 +186,6 @@ spec:
         - |
           set -ex
           mkdir /tendermint/config
-          tendermint gen_node_key
           # Creating genesis.json
           curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > $TMHOME/config/genesis.json
           # Creating node_key.json
@@ -196,7 +195,6 @@ spec:
           # Creating config.toml
           curl -L https://raw.githubusercontent.com/blockfreight/tools/master/config.toml > $TMHOME/config.toml
           cp $TMHOME/config.toml /tendermint/config/config.toml
-          NODE_ID=$(tendermint show_node_id)
           # Starting Tendermint
           tendermint node --moniker="`hostname`" --p2p.seeds="aeabbf6b891435013f2a800fa9e22a1451ca90fd@bftx0.blockfreight.net:8888,6e9515c2cfed19464e6ce11ba2297ecdb411103b@bftx1.blockfreight.net:8888,b8b988370783bd0e58bf926d621a47160af2bdae@bftx2.blockfreight.net:8888,8c091f4e3dc4ac27db1efd38beee012d99967fd8@bftx3.blockfreight.net:8888" --proxy_app="tcp://localhost:46658" --consensus.create_empty_blocks=false
       - name: app
