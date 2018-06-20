@@ -2,9 +2,9 @@
 
 for i in 0 1 2 3
 do
-    address=$BLOCKFREIGHT_SSH_USER@$BFTX$i_MASTER_IP
+    address=$BLOCKFREIGHT_SSH_USER@${BFTX${i}_MASTER_IP}
     echo $address
-    
+
     ssh -oStrictHostKeyChecking=no $BLOCKFREIGHT_SSH_USER@$BFTX$i_MASTER_IP  <<-'ENDSSH'
     curl https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/app.yaml > app.yaml
     sed -i 's/<VALIDATOR_NAME>/bftx$i' app2.yaml
