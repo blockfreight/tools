@@ -8,7 +8,7 @@ do
 
     ssh -oStrictHostKeyChecking=no $BLOCKFREIGHT_SSH_USER@$validator  <<-'ENDSSH'
     curl https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/app.yaml > app.yaml
-    sed -i -- 's/<VALIDATOR_NAME>/bftx$index/g' *
+    sed -i -- 's/<VALIDATOR_NAME>/bftx${index}/g' *
     cat app.yaml
     kubectl apply -f app.yaml && kubectl delete pods --all --grace-period=0 --force
     rm app.yaml
