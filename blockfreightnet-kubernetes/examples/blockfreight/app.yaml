@@ -191,6 +191,7 @@ spec:
           curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > $TMHOME/config/genesis.json
           # Creating node_key.json
           curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/$VALIDATOR_NAME/node_key.json > $TMHOME/config/node_key.json
+          cat $TMHOME/config/node_key.json
           # Creating priv_validator.json
           curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/$VALIDATOR_NAME/priv_validator.json > $TMHOME/config/priv_validator.json
           # Creating config.toml
