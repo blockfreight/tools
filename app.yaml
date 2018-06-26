@@ -180,10 +180,6 @@ spec:
           value: /tendermint
         - name: VALIDATOR_NAME
           value: <VALIDATOR_NAME>
-        - name: PRIVATE-TYPE
-          value: <PRIVATE-TYPE>
-        - name: PRIVATE-KEY
-          value: <PRIVATE-KEY>
         command:
         - /bin/sh
         - "-c"
