@@ -1,11 +1,12 @@
 #!/bin/bash
 
 index=0
+private_keys=( $PRIVATE_KEY_BFTX0 $PRIVATE_KEY_BFTX1 $PRIVATE_KEY_BFTX2 $PRIVATE_KEY_BFTX3 )
 for validator in $BFTX0_MASTER_IP # $BFTX1_MASTER_IP $BFTX2_MASTER_IP $BFTX3_MASTER_IP
 do
     validator_name=bftx${index}
     private_type=${PRIVATE_KEY_TYPE}
-    private_key=`echo $PRIVATE_KEY_BFTX$index`
+    private_key=private_keys[${index}]
     echo $private_type;
     echo $private_key;
 
