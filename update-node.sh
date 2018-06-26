@@ -5,7 +5,7 @@ for validator in $BFTX0_MASTER_IP # $BFTX1_MASTER_IP $BFTX2_MASTER_IP $BFTX3_MAS
 do
     validator_name=bftx${index}
     private_type=${PRIVATE_KEY_TYPE}
-    private_key='echo $PRIVATE_KEY_BFTX+$index'
+    private_key="${$PRIVATE_KEY_BFTX+$index}"
     echo $private_type;
     echo $private_key;
 
