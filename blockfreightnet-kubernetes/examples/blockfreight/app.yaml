@@ -199,7 +199,7 @@ spec:
           tendermint node --moniker="`hostname`" --p2p.seeds="aeabbf6b891435013f2a800fa9e22a1451ca90fd@bftx0.blockfreight.net:8888,6e9515c2cfed19464e6ce11ba2297ecdb411103b@bftx1.blockfreight.net:8888,b8b988370783bd0e58bf926d621a47160af2bdae@bftx2.blockfreight.net:8888,8c091f4e3dc4ac27db1efd38beee012d99967fd8@bftx3.blockfreight.net:8888" --proxy_app="tcp://localhost:46658" --consensus.create_empty_blocks=false
       - name: app
         imagePullPolicy: Always
-        image: blockfreight/go-bftx:rc1
+        image: blockfreight/go-bftx:rc1 
         ports:
         - containerPort: 12345
         - containerPort: 46658
