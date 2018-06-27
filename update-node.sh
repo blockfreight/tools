@@ -10,7 +10,7 @@ do
     private_key=${private_keys[index]}
     private_node_key=${private_node_keys[index]}
 
-   ssh -oStrictHostKeyChecking=no $BLOCKFREIGHT_SSH_USER@$validator "env validator_name=$validator_name;curl https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/app.yaml > app.yaml;sed -i -- 's/<VALIDATOR_NAME>/'$validator_name'/g' *;sed -i -- 's/<PRIVATE_KEY>/'$private_key'/g' *;sed -i -- 's/<PRIVATE_TYPE>/'$private_type'/g' *;sed -i -- 's/<PRIVATE_NODE_KEY>/'$private_node_key'/g' *;cat app.yaml;kubectl apply -f app.yaml && kubectl delete pods --all --grace-period=0 --force;" <<-'ENDSSH'
+   ssh -oStrictHostKeyChecking=no $BLOCKFREIGHT_SSH_USER@$validator "env validator_name=$validator_name;curl https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/app.yaml > app.yaml;sed -i -- 's/<VALIDATOR_NAME>/'$validator_name'/g' app.yaml;sed -i -- 's/<PRIVATE_KEY>/'$private_key'/g' app.yaml;sed -i -- 's/<PRIVATE_TYPE>/'$private_type'/g' app.yaml;sed -i -- 's/<PRIVATE_NODE_KEY>/'$private_node_key'/g' app.yaml;cat app.yaml;kubectl apply -f app.yaml && kubectl delete pods --all --grace-period=0 --force;" <<-'ENDSSH'
     
 ENDSSH
     ((index+=1))
