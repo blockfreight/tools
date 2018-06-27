@@ -200,6 +200,7 @@ spec:
           cat $TMHOME/config/priv_validator.json | jq '.priv_key.type = $PRIVATE_TYPE'
           cat $TMHOME/config/priv_validator.json | jq '.priv_key.value = $PRIVATE_KEY'
           cat $TMHOME/config/priv_validator.json 
+          
 
           # Creating config.toml
           curl -L https://raw.githubusercontent.com/blockfreight/tools/master/config.toml > $TMHOME/config.toml
