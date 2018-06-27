@@ -190,6 +190,8 @@ spec:
         - |
           set -ex
           mkdir /tendermint/config
+          priv_type=$PRIVATE_KEY
+          priv_key=$PRIVATE_KEY
           # Creating genesis.json
           curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > $TMHOME/config/genesis.json
           # Creating node_key.json
@@ -197,10 +199,10 @@ spec:
           # Creating priv_validator.json
           curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/validators/$VALIDATOR_NAME/priv_validator.json > $TMHOME/config/priv_validator.json
           cat $TMHOME/config/priv_validator.json 
-          cat $TMHOME/config/priv_validator.json | jq '.priv_key.type = $PRIVATE_TYPE'
-          cat $TMHOME/config/priv_validator.json | jq '.priv_key.value = $PRIVATE_KEY'
+          cat $TMHOME/config/priv_validator.json | jq '.priv_key.type = $priv_type'
+          cat $TMHOME/config/priv_validator.json | jq '.priv_key.value = $priv_key'
           cat $TMHOME/config/priv_validator.json 
-          
+
 
           # Creating config.toml
           curl -L https://raw.githubusercontent.com/blockfreight/tools/master/config.toml > $TMHOME/config.toml
