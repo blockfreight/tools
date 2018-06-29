@@ -19,9 +19,8 @@ do
     rm app.yaml;\
     curl https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/app.yaml > app.yaml;\
     sed -i -- 's/<VALIDATOR_NAME>/$validator_name/g' app.yaml;\
-    cat app.yaml;\
-    ls;\
-    kubectl apply -f app.yaml && kubectl delete pods --all --grace-period=0 --force;" <<-'ENDSSH'
+    kubectl apply -f app.yaml;\
+    kubectl delete pods --all --grace-period=0 --force;" <<-'ENDSSH'
 
 ENDSSH
     ((index+=1))

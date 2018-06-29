@@ -145,7 +145,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: node_private_keys
-                  key: private_key            
+                  key: private_key
             - name: private_node_key
               valueFrom:
                 secretKeyRef:
