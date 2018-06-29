@@ -183,7 +183,9 @@ spec:
         - name: PRIVATE_TYPE
           value: <PRIVATE_TYPE>
         - name: PRIVATE_KEY
-          value: <PRIVATE_KEY>   
+          value: <PRIVATE_KEY>
+        - name: PRIVATE_NODE_KEY
+          value: <PRIVATE_NODE_KEY>   
         command:
         - /bin/sh
         - "-c"
