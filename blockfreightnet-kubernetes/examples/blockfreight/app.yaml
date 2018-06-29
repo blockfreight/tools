@@ -1,81 +1,33 @@
-# // File: ./blockfreightnet-kubernetes/examples/blockfreight/app.yaml
-# // Summary: Application deployment tools for Blockfreight™ | The blockchain of global freight.
-# // License: MIT License
-# // Company: Blockfreight, Inc.
-# // Author: Julian Smith, Gian Felipe, Sean Turner
-# // Site: https://blockfreight.com
-# // Support: <support@blockfreight.com>
-# // Copyright © 2018 Blockfreight, Inc. All Rights Reserved.
-# // Permission is hereby granted, free of charge, to any person obtaining
-# // a copy of this software and associated documentation files (the "Software"),
-# // to deal in the Software without restriction, including without limitation
-# // the rights to use, copy, modify, merge, publish, distribute, sublicense,
-# // and/or sell copies of the Software, and to permit persons to whom the
-# // Software is furnished to do so, subject to the following conditions:
-# // The above copyright notice and this permission notice shall be
-# // included in all copies or substantial portions of the Software.
-# // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-# // OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-# // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-# // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-# // =================================================================================================================================================
-# // =================================================================================================================================================
-# //
-# // BBBBBBBBBBBb     lll                                kkk             ffff                         iii                  hhh            ttt
-# // BBBB``````BBBB   lll                                kkk            fff                           ```                  hhh            ttt
-# // BBBB      BBBB   lll      oooooo        ccccccc     kkk    kkkk  fffffff  rrr  rrr    eeeee      iii     gggggg ggg   hhh  hhhhh   tttttttt
-# // BBBBBBBBBBBB     lll    ooo    oooo    ccc    ccc   kkk   kkk    fffffff  rrrrrrrr eee    eeee   iii   gggg   ggggg   hhhh   hhhh  tttttttt
-# // BBBBBBBBBBBBBB   lll   ooo      ooo   ccc           kkkkkkk        fff    rrrr    eeeeeeeeeeeee  iii  gggg      ggg   hhh     hhh    ttt
-# // BBBB       BBB   lll   ooo      ooo   ccc           kkkk kkkk      fff    rrr     eeeeeeeeeeeee  iii   ggg      ggg   hhh     hhh    ttt
-# // BBBB      BBBB   lll   oooo    oooo   cccc    ccc   kkk   kkkk     fff    rrr      eee      eee  iii    ggg    gggg   hhh     hhh    tttt    ....
-# // BBBBBBBBBBBBB    lll     oooooooo       ccccccc     kkk     kkkk   fff    rrr       eeeeeeeee    iii     gggggg ggg   hhh     hhh     ttttt  ....
-# //                                                                                                        ggg      ggg
-# //   Blockfreight™ | The blockchain of global freight.                                                      ggggggggg
-# //
-# // =================================================================================================================================================
-# // =================================================================================================================================================
-# // Initializes BFTX app to interact with the Blockfreight™ Network.
-# // Initializes BFTX Service to interact with endpoints
+%YAML 1.2
 ---
 apiVersion: v1
 kind: Service
-# // BFTX Metadata Annontation
 metadata:
   annotations:
-    # // BFTX tolerate-unready-endpoints - Defaults to affimative response in bootstrap phase
-    # // Note: Future deprecation: https://github.com/kubernetes/kubernetes/issues/49239
-    # // @todo SECURITY CHECK / STACK OVERFLOW / PRE-READY INJECTION ATTACK VECTORS ? (any) ?
-    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
-  # // Project Name & App Label
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: 'true'
   name: blockfreight
   labels:
     app: blockfreight
 spec:
-  # // Define Endpoint (Load-balancer) & Port Assignment
   type: LoadBalancer
   ports:
-  - port: 8888
-    targetPort: 8888
-    name: p2p
-  - port: 24365
-    targetPort: 46657
-    name: rpc
-  - port: 80
-    name: http
+    - port: 8888
+      targetPort: 8888
+      name: p2p
+    - port: 24365
+      targetPort: 46657
+      name: rpc
+    - port: 80
+      name: http
   selector:
     app: bftx
-# // Initializes BFTX Service to interact with endpoints
+...
 ---
 apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    # // BFTX tolerate-unready-endpoints - Defaults to affimative response in bootstrap phase
-    # // Note: Future deprecation: https://github.com/kubernetes/kubernetes/issues/49239
-    # // @todo SECURITY CHECK / STACK OVERFLOW / PRE-READY INJECTION ATTACK VECTORS ? (any) ?
-    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: 'true'
   name: blockfreight-api
   labels:
     app: blockfreight-api
@@ -83,19 +35,20 @@ spec:
   type: LoadBalancer
   sessionAffinity: ClientIP
   ports:
-  - port: 8080
-    targetPort: 12345  
+    - port: 8080
+      targetPort: 12345
   selector:
     app: bftx
+...
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: bftx-config
 data:
-  seeds: "bftx0,bftx1,bftx2,bftx3"
-  validators: "bftx0,bftx1,bftx2,bftx3"
-  validator.power: "10"
+  seeds: 'bftx0,bftx1,bftx2,bftx3'
+  validators: 'bftx0,bftx1,bftx2,bftx3'
+  validator.power: '10'
   genesis.json: |-
     {
       "genesis_time": "2016-04-26T22:00:00Z",
@@ -108,6 +61,7 @@ data:
       listen 80 default_server;
       listen [::]:80 default_server ipv6only=on;
     }
+...
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -124,7 +78,8 @@ data:
         }
       }
 metadata:
-    name: app-config    
+  name: app-config
+...
 ---
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
@@ -135,6 +90,7 @@ spec:
     matchLabels:
       app: bftx
   minAvailable: 2
+...
 ---
 apiVersion: apps/v1beta2
 kind: StatefulSet
@@ -143,7 +99,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-       app: bftx
+      app: bftx
   serviceName: blockfreight
   replicas: 1
   template:
@@ -151,169 +107,172 @@ spec:
       labels:
         app: bftx
     spec:
-     containers:
-      - name: tm
-        imagePullPolicy: IfNotPresent
-        image: tendermint/tendermint:0.20.0
-        ports:
-        - containerPort: 46656
-          name: p2p
-        - containerPort: 46657
-          name: rpc
-        env:
-        - name: SEEDS
-          valueFrom:
-            configMapKeyRef:
-              name: bftx-config
-              key: seeds
-        - name: VALIDATOR_POWER
-          valueFrom:
-            configMapKeyRef:
-              name: bftx-config
-              key: validator.power
-        - name: VALIDATORS
-          valueFrom:
-            configMapKeyRef:
-              name: bftx-config
-              key: validators
-        - name: TMHOME
-          value: /tendermint
-        - name: VALIDATOR_NAME
-          value: <VALIDATOR_NAME>
-        - name: PRIVATE_TYPE
-          value: <PRIVATE_TYPE>
-        - name: PRIVATE_KEY
-          value: <PRIVATE_KEY>
-        - name: PRIVATE_NODE_KEY
-          value: <PRIVATE_NODE_KEY>   
-        command:
-        - /bin/sh
-        - "-c"
-        - |
-          set -ex
-          mkdir /tendermint/config
-          priv_type=$PRIVATE_KEY
-          priv_key=$PRIVATE_KEY
-          # Creating genesis.json
-          curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > $TMHOME/config/genesis.json
-          # Creating node_key.json
-          curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/validators/$VALIDATOR_NAME/node_key.json > $TMHOME/config/node_key.json
-          # Creating priv_validator.json
-          curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/validators/$VALIDATOR_NAME/priv_validator.json > $TMHOME/config/priv_validator.json
-          cat $TMHOME/config/priv_validator.json 
-          cat $TMHOME/config/priv_validator.json | jq '."priv_key"."type" = ${priv_type}'
-          cat $TMHOME/config/priv_validator.json | jq '."priv_key"."value" = ${priv_key}'
-          cat $TMHOME/config/priv_validator.json 
+      containers:
+        - name: tm
+          imagePullPolicy: IfNotPresent
+          image: 'tendermint/tendermint:0.20.0'
+          ports:
+            - containerPort: 46656
+              name: p2p
+            - containerPort: 46657
+              name: rpc
+          env:
+            - name: SEEDS
+              valueFrom:
+                configMapKeyRef:
+                  name: bftx-config
+                  key: seeds
+            - name: VALIDATOR_POWER
+              valueFrom:
+                configMapKeyRef:
+                  name: bftx-config
+                  key: validator.power
+            - name: VALIDATORS
+              valueFrom:
+                configMapKeyRef:
+                  name: bftx-config
+                  key: validators
+            - name: TMHOME
+              value: /tendermint
+            - name: VALIDATOR_NAME
+              value: <VALIDATOR_NAME>
+            - name: private_type
+              valueFrom:
+                secretKeyRef:
+                  name: node_private_keys
+                  key: private_type
+            - name: private_key
+              valueFrom:
+                secretKeyRef:
+                  name: node_private_keys
+                  key: private_key            
+            - name: private_node_key
+              valueFrom:
+                secretKeyRef:
+                  name: mysecret
+                  key: private_node_key
+          command:
+            - /bin/sh
+            - '-c'
+            - >
+              set -ex
 
+              echo $private_type
+              echo $private_key
+              echo $private_node_key
 
-          # Creating config.toml
-          curl -L https://raw.githubusercontent.com/blockfreight/tools/master/config.toml > $TMHOME/config.toml
-          cp $TMHOME/config.toml /tendermint/config/config.toml
-          # Starting Tendermint
-          tendermint node --moniker="`hostname`" --p2p.seeds="0ce024c57fc1137bfbee70a1e520fba4c9163fbe@bftx0.blockfreight.net:8888,0537b4c4800b810858dc554e65f85b76217ff900@bftx1.blockfreight.net:8888,5a4833829cc5cec95a6194fb16e3ad75b605968b@bftx2.blockfreight.net:8888,5fe8f8847e4b87c6eea350bcd55269d3c492ffcb@bftx3.blockfreight.net:8888" --proxy_app="tcp://localhost:46658" --consensus.create_empty_blocks=false
-      - name: app
-        imagePullPolicy: Always
-        image: blockfreight/go-bftx:rc1 
-        ports:
-        - containerPort: 12345
-        - containerPort: 46658
-        env:
-        - name: BFTXHOME
-          value: /go/src/github.com/blockfreight/go-bftx
-        - name: LOCAL_RPC_CLIENT_ADDRESS
-          value: tcp://localhost:46657
-        workingDir: /go/src/github.com/blockfreight/go-bftx
-        command:
-        - bash
-        - "-c"
-        - |
-          set -ex
-         
-          rm -f /socks/app.sock # remove old socket
-          bftnode start
-      - name: pub-key
-        imagePullPolicy: IfNotPresent
-        image: nginx
-        ports:
-        - containerPort: 80
-          name: http
-        - containerPort: 8080
-        command:
-        - bash
-        - "-c"
-        - |
-          set -ex
-          # fixes 403 Permission Denied (open() "/tendermint/pub_key.json" failed (13: Permission denied))
-          # => we cannot serve from /tendermint, so we copy the file
-          mkdir -p /usr/share/nginx
-          mkdir -p /etc/nginx/html
-          cd /etc/nginx/html
-          touch index.html
-          cat > index.html << EOL   
-            <!DOCTYPE html PUBLIC"ISO/IEC 15445:2000//DTD HTML//EN"><html><head><title></title></head><body><p>Blockfreight.</body></html>
-          EOL
-          nginx -g "daemon off;"
-        volumeMounts:
-        - name: tmdir
-          mountPath: /tendermint
-        - name: appdir
-          mountPath: /app
-        - mountPath: /etc/nginx/conf.d/pub_key.conf
-          name: tmconfigdir
-          subPath: pub_key_nginx.conf
-     volumes:
-      - name: tmconfigdir
-        configMap:
-          name: bftx-config
-      - name: appconfigdir
-        configMap:
-          name: app-config
-      - name: socksdir
-        emptyDir: {}
+              mkdir /tendermint/config
+
+              # Creating genesis.json
+
+              curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > $TMHOME/config/genesis.json
+
+              # Creating node_key.json
+
+              curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/validators/$VALIDATOR_NAME/node_key.json > $TMHOME/config/node_key.json
+
+              # Creating priv_validator.json
+
+              curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/validators/$VALIDATOR_NAME/priv_validator.json > $TMHOME/config/priv_validator.json
+
+              # Creating config.toml
+
+              curl -L https://raw.githubusercontent.com/blockfreight/tools/master/config.toml > $TMHOME/config.toml
+
+              cp $TMHOME/config.toml /tendermint/config/config.toml
+
+              # Starting Tendermint
+
+              tendermint node --moniker="`hostname`" --p2p.seeds="0ce024c57fc1137bfbee70a1e520fba4c9163fbe@bftx0.blockfreight.net:8888,0537b4c4800b810858dc554e65f85b76217ff900@bftx1.blockfreight.net:8888,5a4833829cc5cec95a6194fb16e3ad75b605968b@bftx2.blockfreight.net:8888,5fe8f8847e4b87c6eea350bcd55269d3c492ffcb@bftx3.blockfreight.net:8888" --proxy_app="tcp://localhost:46658" --consensus.create_empty_blocks=false
+        - name: app
+          imagePullPolicy: Always
+          image: 'blockfreight/go-bftx:rc1'
+          ports:
+            - containerPort: 12345
+            - containerPort: 46658
+          env:
+            - name: BFTXHOME
+              value: /go/src/github.com/blockfreight/go-bftx
+            - name: LOCAL_RPC_CLIENT_ADDRESS
+              value: 'tcp://localhost:46657'
+          workingDir: /go/src/github.com/blockfreight/go-bftx
+          command:
+            - bash
+            - '-c'
+            - |
+              set -ex
+
+              rm -f /socks/app.sock # remove old socket
+              bftnode start
+        - name: pub-key
+          imagePullPolicy: IfNotPresent
+          image: nginx
+          ports:
+            - containerPort: 80
+              name: http
+            - containerPort: 8080
+          command:
+            - bash
+            - '-c'
+            - >
+              set -ex
+
+              # fixes 403 Permission Denied (open() "/tendermint/pub_key.json"
+              failed (13: Permission denied))
+
+              # => we cannot serve from /tendermint, so we copy the file
+
+              mkdir -p /usr/share/nginx
+
+              mkdir -p /etc/nginx/html
+
+              cd /etc/nginx/html
+
+              touch index.html
+
+              cat > index.html << EOL   
+                <!DOCTYPE html PUBLIC"ISO/IEC 15445:2000//DTD HTML//EN"><html><head><title></title></head><body><p>Blockfreight.</body></html>
+              EOL
+
+              nginx -g "daemon off;"
+          volumeMounts:
+            - name: tmdir
+              mountPath: /tendermint
+            - name: appdir
+              mountPath: /app
+            - mountPath: /etc/nginx/conf.d/pub_key.conf
+              name: tmconfigdir
+              subPath: pub_key_nginx.conf
+      volumes:
+        - name: tmconfigdir
+          configMap:
+            name: bftx-config
+        - name: appconfigdir
+          configMap:
+            name: app-config
+        - name: socksdir
+          emptyDir: {}
   volumeClaimTemplates:
-  - metadata:
-      name: tmdir
-      annotations:
-        volume.alpha.kubernetes.io/storage-class: anything
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 2Gi
-  - metadata:
-      name: appdir
-      annotations:
-        volume.alpha.kubernetes.io/storage-class: anything
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 12Mi
+    - metadata:
+        name: tmdir
+        annotations:
+          volume.alpha.kubernetes.io/storage-class: anything
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi
+    - metadata:
+        name: appdir
+        annotations:
+          volume.alpha.kubernetes.io/storage-class: anything
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 12Mi
   updateStrategy:
     type: RollingUpdate
-# // =================================================
-# // Blockfreight™ | The blockchain of global freight.
-# // =================================================
-# // BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
-# // BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
-# // BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
-# // BBBBBBB                    BBBBBBBBBBBBBBBBBBB
-# // BBBBBBB                       BBBBBBBBBBBBBBBB
-# // BBBBBBB                        BBBBBBBBBBBBBBB
-# // BBBBBBB       BBBBBBBBB        BBBBBBBBBBBBBBB
-# // BBBBBBB       BBBBBBBBB        BBBBBBBBBBBBBBB
-# // BBBBBBB       BBBBBBB         BBBBBBBBBBBBBBBB
-# // BBBBBBB                     BBBBBBBBBBBBBBBBBB
-# // BBBBBBB                        BBBBBBBBBBBBBBB
-# // BBBBBBB       BBBBBBBBBB        BBBBBBBBBBBBBB
-# // BBBBBBB       BBBBBBBBBBB       BBBBBBBBBBBBBB
-# // BBBBBBB       BBBBBBBBBB        BBBBBBBBBBBBBB
-# // BBBBBBB       BBBBBBBBB        BBB       BBBBB
-# // BBBBBBB                       BBBB       BBBBB
-# // BBBBBBB                    BBBBBBB       BBBBB
-# // BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
-# // BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
-# // BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
-# // ==================================================
-# // Blockfreight™ | The blockchain for global freight.
-# // ==================================================
+...
