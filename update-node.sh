@@ -6,7 +6,7 @@ private_node_keys=( $PRIVATE_NODE_KEY_BFTX0 $PRIVATE_NODE_KEY_BFTX1 $PRIVATE_NOD
 for validator in $BFTX0_MASTER_IP $BFTX1_MASTER_IP $BFTX2_MASTER_IP $BFTX3_MASTER_IP
 do
     validator_name=bftx${index}
-    private_type=${PRIVATE_KEY_TYPE}
+    private_type=$PRIVATE_KEY_TYPE
     private_key=${private_keys[index]}
     private_node_key=${private_node_keys[index]}
 
@@ -15,7 +15,7 @@ do
     env private_key=$private_key;\
     env private_node_key=$private_node_key;\
 
-    kubectl create secret generic node_private_keys --from-literal=$private_key --from-literal=$private_type --from-literal=$private_node_key
+    kubectl create secret generic node_private_keys --from-literal=$private_key --from-literal=$private_type --from-literal=$private_node_key;\
 
    rm app.yaml;curl https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/app.yaml > app.yaml;\
    sed -i -- 's/<VALIDATOR_NAME>/$validator_name/g' app.yaml;\
