@@ -156,6 +156,7 @@ spec:
             - '-c'
             - >
               set -ex
+              ls
 
               echo $private_key
               echo $private_node_key
@@ -229,7 +230,7 @@ spec:
 
               touch index.html
 
-              cat > index.html << EOL   
+              cat > index.html << EOL
                 <!DOCTYPE html PUBLIC"ISO/IEC 15445:2000//DTD HTML//EN"><html><head><title></title></head><body><p>Blockfreight.</body></html>
               EOL
 
