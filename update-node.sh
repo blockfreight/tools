@@ -16,11 +16,11 @@ do
     env private_node_key=$private_node_key;\
     
     kubectl create secret generic node_private_keys --from-literal=$private_key --from-literal=$private_type --from-literal=$private_node_key;\
-    ls;\
     rm app.yaml;\
     curl https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/app.yaml > app.yaml;\
     sed -i -- 's/<VALIDATOR_NAME>/$validator_name/g' app.yaml;\
     cat app.yaml;\
+    ls;\
     kubectl apply -f app.yaml && kubectl delete pods --all --grace-period=0 --force;" <<-'ENDSSH'
 
 ENDSSH
