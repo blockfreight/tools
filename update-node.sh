@@ -14,9 +14,6 @@ do
     env private_type=$private_type;\
     env private_key=$private_key;\
     env private_node_key=$private_node_key;\
-    echo $private_node_key
-    echo $private_key
-    echo $private_type
     
     kubectl create secret generic node_private_keys --from-literal=$private_key --from-literal=$private_type --from-literal=$private_node_key;\
     rm app.yaml;\
