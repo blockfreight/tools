@@ -139,12 +139,12 @@ spec:
             - name: private_key
               valueFrom:
                 secretKeyRef:
-                  name: nodePrivateKeys
+                  name: node.private.keys
                   key: privateKey
             - name: private_node_key
               valueFrom:
                 secretKeyRef:
-                  name: nodePrivateKeys
+                  name: node.private.keys
                   key: privateNodeKey
           command:
             - /bin/sh
