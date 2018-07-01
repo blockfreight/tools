@@ -135,7 +135,10 @@ spec:
             - name: TMHOME
               value: /tendermint
             - name: VALIDATOR_NAME
-              value: <VALIDATOR_NAME>
+              valueFrom:
+                  secretKeyRef:
+                    name: node.private.keys
+                    key: validatorName
             - name: private_key
               valueFrom:
                 secretKeyRef:
@@ -155,6 +158,7 @@ spec:
 
               echo $private_key
               echo $private_node_key
+              echo $VALIDATOR_NAME
 
               mkdir /tendermint/config
 
