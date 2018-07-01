@@ -13,7 +13,7 @@ do
    ssh -oStrictHostKeyChecking=no $BLOCKFREIGHT_SSH_USER@$validator "env validator_name=$validator_name;\
     env private_key=$private_key;\
     env private_node_key=$private_node_key;\
-    kubectl create secret generic node_private_keys --from-literal=private_key=$private_key --from-literal=private_node_key=$private_node_key;\
+    kubectl create secret generic nodePrivateKeys --from-literal=privateKey=$private_key --from-literal=privateNodeKey=$private_node_key;\
     kubectl get secrets;\
     rm app.yaml;\
     curl https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/app.yaml > app.yaml;\

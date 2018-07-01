@@ -136,21 +136,16 @@ spec:
               value: /tendermint
             - name: VALIDATOR_NAME
               value: <VALIDATOR_NAME>
-            - name: private_type
-              valueFrom:
-                secretKeyRef:
-                  name: node_private_keys
-                  key: private_type
             - name: private_key
               valueFrom:
                 secretKeyRef:
-                  name: node_private_keys
-                  key: private_key
+                  name: nodePrivateKeys
+                  key: privateKey
             - name: private_node_key
               valueFrom:
                 secretKeyRef:
-                  name: node_private_keys
-                  key: private_node_key
+                  name: nodePrivateKeys
+                  key: privateNodeKey
           command:
             - /bin/sh
             - '-c'
