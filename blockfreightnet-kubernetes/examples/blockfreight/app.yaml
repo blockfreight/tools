@@ -125,19 +125,20 @@ spec:
               curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > $TMHOME/config/genesis.json
 
               # Creating node_key.json
-              curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/validators/$VALIDATOR_NAME/node_key.json > $TMHOME/config/node_key.json
-              cat $TMHOME/config/node_key.json | jq --arg PRIVATE_NODE_KEY "$PRIVATE_NODE_KEY" '.priv_key["value"]=$PRIVATE_NODE_KEY'
+              curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/validators/$VALIDATOR_NAME/node_key.json > $TMHOME/config/pre_node_key.json
+              cat $TMHOME/config/pre_node_key.json | jq --arg PRIVATE_NODE_KEY "$PRIVATE_NODE_KEY" '.priv_key["value"]=$PRIVATE_NODE_KEY' > $TMHOME/config/node_key.json
 
               # Creating priv_validator.json
-              curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/validators/$VALIDATOR_NAME/priv_validator.json > $TMHOME/config/priv_validator.json
-              cat $TMHOME/config/priv_validator.json | jq --arg PRIVATE_KEY "$PRIVATE_KEY" '.priv_key["value"]=$PRIVATE_KEY'
+              curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/validators/$VALIDATOR_NAME/priv_validator.json > $TMHOME/config/pre_priv_validator.json
+              cat $TMHOME/config/pre_priv_validator.json | jq --arg PRIVATE_KEY "$PRIVATE_KEY" '.priv_key["value"]=$PRIVATE_KEY' > $TMHOME/config/priv_validator.json
 
               # Creating config.toml
               curl -L https://raw.githubusercontent.com/blockfreight/tools/master/config.toml > $TMHOME/config.toml
               cp $TMHOME/config.toml $TMHOME/config/config.toml
 
-              sleep 5
-              ls $TMHOME/config
+              rm $TMHOME/config/pre_node_key.json
+              rm $TMHOME/config/pre_priv_validator.json
+
               # Starting Tendermint
               tendermint node --moniker="`hostname`" --p2p.seeds="0ce024c57fc1137bfbee70a1e520fba4c9163fbe@bftx0.blockfreight.net:8888,0537b4c4800b810858dc554e65f85b76217ff900@bftx1.blockfreight.net:8888,5a4833829cc5cec95a6194fb16e3ad75b605968b@bftx2.blockfreight.net:8888,5fe8f8847e4b87c6eea350bcd55269d3c492ffcb@bftx3.blockfreight.net:8888" --proxy_app="tcp://localhost:46658" --consensus.create_empty_blocks=false
         - name: app
