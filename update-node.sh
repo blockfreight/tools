@@ -5,7 +5,7 @@ private_keys=( $PRIVATE_KEY_BFTX0, $PRIVATE_KEY_BFTX1, $PRIVATE_KEY_BFTX2, $PRIV
 private_node_keys=( $PRIVATE_NODE_KEY_BFTX0, $PRIVATE_NODE_KEY_BFTX1, $PRIVATE_NODE_KEY_BFTX2, $PRIVATE_NODE_KEY_BFTX3 )
 bftx_master_ip_array=( $BFTX0_MASTER_IP, $BFTX1_MASTER_IP, $BFTX2_MASTER_IP, $BFTX3_MASTER_IP )
 
-for validator in bftx_master_ip_array
+for validator in  "${bftx_master_ip_array[@]}"
 do
     validator_name=bftx${index}
     private_key=${private_keys[index]}
