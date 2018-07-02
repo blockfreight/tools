@@ -118,7 +118,7 @@ spec:
           command:
             - /bin/sh
             - '-c'
-            - >
+            - |
               mkdir /tendermint/config
 
               # Creating genesis.json
