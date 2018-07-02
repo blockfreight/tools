@@ -126,13 +126,11 @@ spec:
 
               # Creating node_key.json
               curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/validators/$VALIDATOR_NAME/node_key.json > $TMHOME/config/node_key.json
-              cat $TMHOME/config/node_key.json | jq '.priv_key.value="$PRIVATE_NODE_KEY"'
-              cat $TMHOME/config/node_key.json
+              cat $TMHOME/config/node_key.json | jq --arg PRIVATE_NODE_KEY "$PRIVATE_NODE_KEY" '.priv_key["value"]=$PRIVATE_NODE_KEY'
 
               # Creating priv_validator.json
               curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/validators/$VALIDATOR_NAME/priv_validator.json > $TMHOME/config/priv_validator.json
-              cat $TMHOME/config/priv_validator.json | jq '.priv_key.value="$PRIVATE_KEY"'
-              cat $TMHOME/config/priv_validator.json
+              cat $TMHOME/config/node_key.json | jq --arg PRIVATE_NODE_KEY "$PRIVATE_KEY" '.priv_key["value"]=$PRIVATE_KEY'
 
               # Creating config.toml
               curl -L https://raw.githubusercontent.com/blockfreight/tools/master/config.toml > $TMHOME/config.toml
