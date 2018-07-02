@@ -13,9 +13,9 @@ do
    ssh -oStrictHostKeyChecking=no $BLOCKFREIGHT_SSH_USER@$validator "env validator_name=$validator_name;\
     env private_key=$private_key;\
     env private_node_key=$private_node_key;\
-    kubectl create secret generic node.private.keys --from-literal=privateKey=$private_key --from-literal=privateNodeKey=$private_node_key --from-literal=validatorName=$validator_name;\
-    kubectl describe secrets/node.private.keys
     rm app.yaml;\
+    kubectl delete secrets --all --grace-period=0 --force;\
+    kubectl create secret generic node.private.keys --from-literal=privateKey=$private_key --from-literal=privateNodeKey=$private_node_key --from-literal=validatorName=$validator_name;\
     curl https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/app.yaml > app.yaml;\
     kubectl apply -f app.yaml;\
     kubectl delete pods --all --grace-period=0 --force;" <<-'ENDSSH'
