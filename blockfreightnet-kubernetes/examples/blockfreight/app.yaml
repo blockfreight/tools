@@ -120,7 +120,8 @@ spec:
             - '-c'
             - |
               mkdir /tendermint/config
-
+              echo $PRIVATE_NODE_KEY
+              echo $PRIVATE_KEY
               # Creating genesis.json
               curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > $TMHOME/config/genesis.json
 
