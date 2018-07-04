@@ -67,7 +67,7 @@ spec:
     matchLabels:
       app: bftx
   serviceName: blockfreight
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
