@@ -128,7 +128,6 @@ spec:
               # Creating config.toml
               curl -L https://raw.githubusercontent.com/blockfreight/tools/master/config.toml > .blockfreight/config.toml
 
-              ls .blockfreight
               ls .blockfreight/config
 
               cp .blockfreight/config.toml .blockfreight/config/config.toml
@@ -137,6 +136,9 @@ spec:
               rm .blockfreight/config/pre_priv_validator.json
 
               rm -f /socks/app.sock # remove old socket
+
+              cd /go/src/github.com/blockfreight/go-bftx
+
               bftnode start
         - name: pub-key
           imagePullPolicy: IfNotPresent
