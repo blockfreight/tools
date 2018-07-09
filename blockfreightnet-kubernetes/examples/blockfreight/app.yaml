@@ -111,6 +111,7 @@ spec:
             - bash
             - '-c'
             - |
+              mkdir /.blockfreight
               mkdir /.blockfreight/config
 
                # Creating genesis.json
