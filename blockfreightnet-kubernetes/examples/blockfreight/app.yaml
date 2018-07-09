@@ -106,7 +106,6 @@ spec:
                 secretKeyRef:
                   name: node.private.keys
                   key: privateNodeKey
-          workingDir: /go/src/github.com/blockfreight/go-bftx
           command:
             - bash
             - '-c'
@@ -138,6 +137,8 @@ spec:
               rm -f /socks/app.sock # remove old socket
 
               cd /go/src/github.com/blockfreight/go-bftx
+
+              pwd
 
               bftnode start
         - name: pub-key
