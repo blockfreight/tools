@@ -127,6 +127,10 @@ spec:
 
               # Creating config.toml
               curl -L https://raw.githubusercontent.com/blockfreight/tools/master/config.toml > .blockfreight/config.toml
+
+              ls .blockfreight
+              ls .blockfreight/config
+
               cp .blockfreight/config.toml .blockfreight/config/config.toml
 
               rm .blockfreight/config/pre_node_key.json
