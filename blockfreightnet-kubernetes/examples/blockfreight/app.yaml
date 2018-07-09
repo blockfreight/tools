@@ -74,32 +74,23 @@ spec:
         app: bftx
     spec:
       containers:
-        - name: tm
-          imagePullPolicy: IfNotPresent
-          image: 'tendermint/tendermint:0.20.0'
+        - name: app
+          imagePullPolicy: Always
+          image: 'blockfreight/go-bftx:binary'
           ports:
+            - containerPort: 12345
+            - containerPort: 46658
             - containerPort: 46656
               name: p2p
             - containerPort: 46657
               name: rpc
           env:
-            - name: SEEDS
-              valueFrom:
-                configMapKeyRef:
-                  name: bftx-config
-                  key: seeds
-            - name: VALIDATOR_POWER
-              valueFrom:
-                configMapKeyRef:
-                  name: bftx-config
-                  key: validator.power
-            - name: VALIDATORS
-              valueFrom:
-                configMapKeyRef:
-                  name: bftx-config
-                  key: validators
-            - name: TMHOME
-              value: /tendermint
+            - name: BFTXHOME
+              value: /go/src/github.com/blockfreight/go-bftx
+            - name: LOCAL_RPC_CLIENT_ADDRESS
+              value: 'tcp://localhost:46657'
+            - name: HOME
+              value: ~
             - name: VALIDATOR_NAME
               valueFrom:
                 secretKeyRef:
@@ -115,49 +106,30 @@ spec:
                 secretKeyRef:
                   name: node.private.keys
                   key: privateNodeKey
-          command:
-            - /bin/sh
-            - '-c'
-            - |
-              mkdir /tendermint/config
-
-              # Creating genesis.json
-              curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > $TMHOME/config/genesis.json
-
-              # Creating node_key.json
-              curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/validators/$VALIDATOR_NAME/node_key.json > $TMHOME/config/pre_node_key.json
-              cat $TMHOME/config/pre_node_key.json | jq --arg PRIVATE_NODE_KEY "$PRIVATE_NODE_KEY" '.priv_key["value"]=$PRIVATE_NODE_KEY' > $TMHOME/config/node_key.json
-
-              # Creating priv_validator.json
-              curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/validators/$VALIDATOR_NAME/priv_validator.json > $TMHOME/config/pre_priv_validator.json
-              cat $TMHOME/config/pre_priv_validator.json | jq --arg PRIVATE_KEY "$PRIVATE_KEY" '.priv_key["value"]=$PRIVATE_KEY' > $TMHOME/config/priv_validator.json
-
-              # Creating config.toml
-              curl -L https://raw.githubusercontent.com/blockfreight/tools/master/config.toml > $TMHOME/config.toml
-              cp $TMHOME/config.toml $TMHOME/config/config.toml
-
-              rm $TMHOME/config/pre_node_key.json
-              rm $TMHOME/config/pre_priv_validator.json
-
-              # Starting Tendermint
-              tendermint node --moniker="`hostname`" --p2p.seeds="0ce024c57fc1137bfbee70a1e520fba4c9163fbe@bftx0.blockfreight.net:8888,0537b4c4800b810858dc554e65f85b76217ff900@bftx1.blockfreight.net:8888,5a4833829cc5cec95a6194fb16e3ad75b605968b@bftx2.blockfreight.net:8888,5fe8f8847e4b87c6eea350bcd55269d3c492ffcb@bftx3.blockfreight.net:8888" --proxy_app="tcp://localhost:46658" --consensus.create_empty_blocks=false
-        - name: app
-          imagePullPolicy: Always
-          image: 'blockfreight/go-bftx:rc1'
-          ports:
-            - containerPort: 12345
-            - containerPort: 46658
-          env:
-            - name: BFTXHOME
-              value: /go/src/github.com/blockfreight/go-bftx
-            - name: LOCAL_RPC_CLIENT_ADDRESS
-              value: 'tcp://localhost:46657'
           workingDir: /go/src/github.com/blockfreight/go-bftx
           command:
             - bash
             - '-c'
             - |
-              set -ex
+              mkdir $HOME/.blockfreight/config
+
+               # Creating genesis.json
+              curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > $HOME/.blockfreight/config/genesis.json
+
+              # Creating node_key.json
+              curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/validators/$VALIDATOR_NAME/node_key.json > $HOME/.blockfreight/config/pre_node_key.json
+              cat $HOME/.blockfreight/config/pre_node_key.json | jq --arg PRIVATE_NODE_KEY "$PRIVATE_NODE_KEY" '.priv_key["value"]=$PRIVATE_NODE_KEY' > $HOME/.blockfreight/config/node_key.json
+
+              # Creating priv_validator.json
+              curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/validators/$VALIDATOR_NAME/priv_validator.json > $HOME/.blockfreight/config/pre_priv_validator.json
+              cat $HOME/.blockfreight/config/pre_priv_validator.json | jq --arg PRIVATE_KEY "$PRIVATE_KEY" '.priv_key["value"]=$PRIVATE_KEY' > $HOME/.blockfreight/config/priv_validator.json
+
+              # Creating config.toml
+              curl -L https://raw.githubusercontent.com/blockfreight/tools/master/config.toml > $HOME/.blockfreight/config.toml
+              cp $HOME/.blockfreight/config.toml $HOME/.blockfreight/config/config.toml
+
+              rm $HOME/.blockfreight/config/pre_node_key.json
+              rm $HOME/.blockfreight/config/pre_priv_validator.json
 
               rm -f /socks/app.sock # remove old socket
               bftnode start
