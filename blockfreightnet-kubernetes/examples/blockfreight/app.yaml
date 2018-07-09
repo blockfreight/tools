@@ -111,7 +111,7 @@ spec:
             - '-c'
             - |
               mkdir $HOME/.blockfreight
-              mkdir $HOME/$HOME/.blockfreight/config
+              mkdir $HOME/.blockfreight/config
 
                # Creating genesis.json
               curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/genesis.json > $HOME/.blockfreight/config/genesis.json
