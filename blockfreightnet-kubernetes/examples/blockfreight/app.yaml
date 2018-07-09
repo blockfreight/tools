@@ -119,18 +119,18 @@ spec:
 
               # Creating node_key.json
               curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/validators/$VALIDATOR_NAME/node_key.json > /.blockfreight/config/pre_node_key.json
-              cat $HOME/.blockfreight/config/pre_node_key.json | jq --arg PRIVATE_NODE_KEY "$PRIVATE_NODE_KEY" '.priv_key["value"]=$PRIVATE_NODE_KEY' > /.blockfreight/config/node_key.json
+              cat /.blockfreight/config/pre_node_key.json | jq --arg PRIVATE_NODE_KEY "$PRIVATE_NODE_KEY" '.priv_key["value"]=$PRIVATE_NODE_KEY' > /.blockfreight/config/node_key.json
 
               # Creating priv_validator.json
               curl -L https://raw.githubusercontent.com/blockfreight/tools/master/blockfreightnet-kubernetes/examples/blockfreight/validators/$VALIDATOR_NAME/priv_validator.json > /.blockfreight/config/pre_priv_validator.json
-              cat $HOME/.blockfreight/config/pre_priv_validator.json | jq --arg PRIVATE_KEY "$PRIVATE_KEY" '.priv_key["value"]=$PRIVATE_KEY' > /.blockfreight/config/priv_validator.json
+              cat /.blockfreight/config/pre_priv_validator.json | jq --arg PRIVATE_KEY "$PRIVATE_KEY" '.priv_key["value"]=$PRIVATE_KEY' > /.blockfreight/config/priv_validator.json
 
               # Creating config.toml
               curl -L https://raw.githubusercontent.com/blockfreight/tools/master/config.toml > /.blockfreight/config.toml
-              cp $HOME/.blockfreight/config.toml $HOME/.blockfreight/config/config.toml
+              cp /.blockfreight/config.toml /.blockfreight/config/config.toml
 
-              rm $HOME/.blockfreight/config/pre_node_key.json
-              rm $HOME/.blockfreight/config/pre_priv_validator.json
+              rm /.blockfreight/config/pre_node_key.json
+              rm /.blockfreight/config/pre_priv_validator.json
 
               rm -f /socks/app.sock # remove old socket
               bftnode start
