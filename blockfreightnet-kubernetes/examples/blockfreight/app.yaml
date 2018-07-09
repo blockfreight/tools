@@ -128,7 +128,7 @@ spec:
               curl -L https://raw.githubusercontent.com/blockfreight/tools/master/config.toml > $HOME/.blockfreight/config.toml
               cp $HOME/.blockfreight/config.toml $HOME/.blockfreight/config/config.toml
 
-              ls /root/$HOME/.blockfreight/config
+              ls $HOME/.blockfreight/config
 
               rm $HOME/.blockfreight/config/pre_node_key.json
               rm $HOME/.blockfreight/config/pre_priv_validator.json
