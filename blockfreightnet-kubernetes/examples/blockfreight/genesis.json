@@ -1,53 +1,53 @@
 {
-    "genesis_time": "2016-04-26T22:00:00Z",
-    "chain_id": "chain-IdealX",
-    "consensus_params": {
-      "block_size_params": {
-        "max_bytes": "22020096",
-        "max_txs": "10000",
-        "max_gas": "-1"
-      },
-      "tx_size_params": {
-        "max_bytes": "10240",
-        "max_gas": "-1"
-      },
-      "block_gossip_params": {
-        "block_part_size_bytes": "65536"
-      },
-      "evidence_params": {
-        "max_age": "100000"
-      }
+  "genesis_time": "2016-04-26T22:00:00Z",
+  "chain_id": "chain-IdealX",
+  "consensus_params": {
+    "block_size_params": {
+      "max_bytes": 22020096,
+      "max_txs": 10000,
+      "max_gas": -1
     },
-    "validators": [
-      {
-        "pub_key": {
-          "type": "tendermint/PubKeyEd25519",
-          "value": "/onlxfTSSNr0rl8hzcR2lfSQ7C79l8LCvnLXNQEEkZQ="
-        },
-        "power": 10,
-        "name": "bftx0"
-      }, {
-        "pub_key": {
-          "type": "tendermint/PubKeyEd25519",
-          "value": "p/wRP67juuvN1QQtVUTHkqeb0a3sNOR5PFdr1tmzSrU="
-        },
-        "power": 10,
-        "name": "bftx1"
-      }, {
-        "pub_key": {
-          "type": "tendermint/PubKeyEd25519",
-          "value": "hBkqAqcWuCpQ+tRsGBES5FYVMGXsmcCkFSn7rBJ5aUI="
-        },
-        "power": 10,
-        "name": "bftx2"
-      }, {
-        "pub_key": {
-          "type": "tendermint/PubKeyEd25519",
-          "value": "96bnHmBnov3PcCwHTJx1GAgjk/v4X5SqIVFTD4yrpUY="
-        },
-        "power": 10,
-        "name": "bftx3"
-      }
-    ],
-    "app_hash": ""
+    "tx_size_params": {
+      "max_bytes": 10240,
+      "max_gas": -1
+    },
+    "block_gossip_params": {
+      "block_part_size_bytes": 65536
+    },
+    "evidence_params": {
+      "max_age": 100000
+    }
+  },
+  "validators": [
+    {
+      "pub_key": {
+        "type": "AC26791624DE60",
+        "value": "/onlxfTSSNr0rl8hzcR2lfSQ7C79l8LCvnLXNQEEkZQ="
+      },
+      "power": 10,
+      "name": "bftx0"
+    }, {
+      "pub_key": {
+        "type": "AC26791624DE60",
+        "value": "p/wRP67juuvN1QQtVUTHkqeb0a3sNOR5PFdr1tmzSrU="
+      },
+      "power": 10,
+      "name": "bftx1"
+    }, {
+      "pub_key": {
+        "type": "AC26791624DE60",
+        "value": "hBkqAqcWuCpQ+tRsGBES5FYVMGXsmcCkFSn7rBJ5aUI="
+      },
+      "power": 10,
+      "name": "bftx2"
+    }, {
+      "pub_key": {
+        "type": "AC26791624DE60",
+        "value": "96bnHmBnov3PcCwHTJx1GAgjk/v4X5SqIVFTD4yrpUY="
+      },
+      "power": 10,
+      "name": "bftx3"
+    }
+  ],
+  "app_hash": ""
 }
