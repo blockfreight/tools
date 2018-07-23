@@ -133,6 +133,8 @@ spec:
               rm $HOME/.blockfreight/config/pre_node_key.json
               rm $HOME/.blockfreight/config/pre_priv_validator.json
 
+              cat $HOME/.blockfreight/config/priv_validator.json
+
               rm -f /socks/app.sock # remove old socket
 
               cd /go/src/github.com/blockfreight/go-bftx
