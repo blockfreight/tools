@@ -1,14 +1,14 @@
 {
   "address": "722D636F1F6DDAC979249F09FE2FD8C90B3E1FA8",
   "pub_key": {
-    "type": "tendermint/PubKeyEd25519",
+    "type": "954568A3288910",
     "value": "hBkqAqcWuCpQ+tRsGBES5FYVMGXsmcCkFSn7rBJ5aUI="
   },
   "last_height": "0",
   "last_round": "0",
   "last_step": 0,
   "priv_key": {
-    "type": "tendermint/PrivKeyEd25519",
+    "type": "954568A3288910",
     "value": ""
   }
 }
