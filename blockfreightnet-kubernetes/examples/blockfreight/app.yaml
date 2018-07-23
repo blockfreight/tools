@@ -133,7 +133,7 @@ spec:
               rm $HOME/.blockfreight/config/pre_node_key.json
               rm $HOME/.blockfreight/config/pre_priv_validator.json
 
-              cat $HOME/.blockfreight/config/priv_validator.json
+              cat $HOME/.blockfreight/config/genesis.json
 
               rm -f /socks/app.sock # remove old socket
 
