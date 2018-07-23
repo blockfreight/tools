@@ -139,6 +139,9 @@ spec:
               echo 'Genesis'
               cat $HOME/.blockfreight/config/genesis.json
 
+              echo 'NodeKey'
+              cat $HOME/.blockfreight/config/node_key.json
+
               rm -f /socks/app.sock # remove old socket
 
               cd /go/src/github.com/blockfreight/go-bftx
