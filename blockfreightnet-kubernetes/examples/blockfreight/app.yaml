@@ -13,7 +13,7 @@ spec:
       targetPort: 8888
       name: p2p
     - port: 24365
-      targetPort: 26657
+      targetPort: 46657
       name: rpc
     - port: 80
       name: http
@@ -82,13 +82,13 @@ spec:
             - containerPort: 46658
             - containerPort: 46656
               name: p2p
-            - containerPort: 26657
+            - containerPort: 46657
               name: rpc
           env:
             - name: BFTXHOME
               value: /go/src/github.com/blockfreight/go-bftx
             - name: LOCAL_RPC_CLIENT_ADDRESS
-              value: 'tcp://localhost:26657'
+              value: 'tcp://localhost:46657'
             - name: HOME
               value: ~
             - name: VALIDATOR_NAME
