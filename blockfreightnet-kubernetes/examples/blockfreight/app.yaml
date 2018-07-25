@@ -76,7 +76,7 @@ spec:
       containers:
         - name: app
           imagePullPolicy: Always
-          image: 'blockfreight/go-bftx:godep'
+          image: 'blockfreight/go-bftx:bftx'
           ports:
             - containerPort: 12345
             - containerPort: 46658
@@ -133,22 +133,9 @@ spec:
               rm $HOME/.blockfreight/config/pre_node_key.json
               rm $HOME/.blockfreight/config/pre_priv_validator.json
 
-              echo 'Priv'
-              cat $HOME/.blockfreight/config/priv_validator.json
-
-              echo 'Genesis'
-              cat $HOME/.blockfreight/config/genesis.json
-
-              echo 'NodeKey'
-              cat $HOME/.blockfreight/config/node_key.json
-
               rm -f /socks/app.sock # remove old socket
 
-              cd /go/src/github.com/blockfreight/go-bftx
-
-              pwd
-
-              bftnode start
+              bftx node start -v
         - name: pub-key
           imagePullPolicy: IfNotPresent
           image: nginx
