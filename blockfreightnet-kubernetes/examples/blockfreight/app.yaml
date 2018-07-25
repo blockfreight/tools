@@ -76,7 +76,7 @@ spec:
       containers:
         - name: app
           imagePullPolicy: Always
-          image: 'blockfreight/go-bftx:bftx'
+          image: 'blockfreight/go-bftx:rc1'
           ports:
             - containerPort: 12345
             - containerPort: 46658
