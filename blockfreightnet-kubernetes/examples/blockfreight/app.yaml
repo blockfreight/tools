@@ -33,7 +33,7 @@ spec:
   sessionAffinity: ClientIP
   ports:
     - port: 8080
-      targetPort: 12345
+      targetPort: 8080
   selector:
     app: bftx
 ---
@@ -78,7 +78,7 @@ spec:
           imagePullPolicy: Always
           image: 'blockfreight/go-bftx:rc1'
           ports:
-            - containerPort: 12345
+            - containerPort: 8080
             - containerPort: 46658
             - containerPort: 46656
               name: p2p
@@ -127,8 +127,6 @@ spec:
               # Creating config.toml
               curl -L https://raw.githubusercontent.com/blockfreight/tools/master/config.toml > $HOME/.blockfreight/config.toml
               cp $HOME/.blockfreight/config.toml $HOME/.blockfreight/config/config.toml
-
-              ls $HOME/.blockfreight/config
 
               rm $HOME/.blockfreight/config/pre_node_key.json
               rm $HOME/.blockfreight/config/pre_priv_validator.json

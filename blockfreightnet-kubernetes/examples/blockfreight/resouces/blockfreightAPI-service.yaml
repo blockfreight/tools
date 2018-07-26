@@ -14,6 +14,6 @@ spec:
   sessionAffinity: ClientIP
   ports:
   - port: 8080
-    targetPort: 12345  
+    targetPort: 8080  
   selector:
     app: bftx

@@ -59,7 +59,7 @@ spec:
         imagePullPolicy: Always
         image: blockfreight/go-bftx:rc1
         ports:
-        - containerPort: 12345
+        - containerPort: 8080
         - containerPort: 46658
         env:
         - name: BFTXHOME
