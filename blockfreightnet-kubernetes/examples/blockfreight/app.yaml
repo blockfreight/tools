@@ -179,7 +179,7 @@ spec:
             name: bftx-config
         - name: appconfigdir
           configMap:
-            name: app-config
+            name: bftx-config
         - name: socksdir
           emptyDir: {}
   volumeClaimTemplates:
